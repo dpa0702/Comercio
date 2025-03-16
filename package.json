@@ -9,7 +9,8 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "postinstall": "echo 'Ignorando avisos...' && exit 0"
   },
   "private": true,
   "dependencies": {

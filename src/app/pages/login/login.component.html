@@ -1,0 +1,35 @@
+<div class="login-container">
+    <mat-card class="login-card">
+      <h2>Login</h2>
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>E-mail</mat-label>
+          <input matInput type="email" formControlName="email" />
+          <mat-error *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+            Informe um e-mail válido.
+          </mat-error>
+        </mat-form-field>
+  
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Senha</mat-label>
+          <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password" />
+          <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
+            <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          <mat-error *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+            A senha deve ter no mínimo 6 caracteres.
+          </mat-error>
+        </mat-form-field>
+  
+        <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid">
+          Entrar
+        </button>
+
+        <mat-error *ngIf="erroLogin" class="erro-mensagem">
+          {{ erroLogin }}
+        </mat-error>
+        
+      </form>
+    </mat-card>
+  </div>
+  

@@ -40,10 +40,12 @@ export class ProdutosComponent implements OnInit {
 
   carregarProdutos() {
     this.dataSource.data = [
-      { id: 1, nome: "Produto 1", preco: "1" },
-      { id: 2, nome: "Produto 2", preco: "2" },
-      { id: 3, nome: "Produto 3", preco: "3" },
-      { id: 4, nome: "Produto 4", preco: "4" }
+      { id: 1, nome: "Jumbo Branco", preco: "29.00" },
+      { id: 2, nome: "Extra Branco", preco: "27.00" },
+      { id: 3, nome: "Grande Branco", preco: "25.00" },
+      { id: 4, nome: "Jumbo Vermelho", preco: "30.00" },
+      { id: 5, nome: "Extra Vermelho", preco: "28.00" },
+      { id: 6, nome: "Grande Vermelho", preco: "26.00" },
     ];
     this.dataSource.paginator = this.paginator;
   }

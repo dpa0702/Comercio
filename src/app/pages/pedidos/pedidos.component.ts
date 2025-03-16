@@ -40,10 +40,10 @@ export class PedidosComponent implements OnInit {
 
   carregarPedidos() {
     this.dataSource.data = [
-      { id: 1, cliente: "Cliente 1", total: "1" },
-      { id: 2, cliente: "Cliente 2", total: "2" },
-      { id: 3, cliente: "Cliente 3", total: "3" },
-      { id: 4, cliente: "Cliente 4", total: "4" }
+      { id: 1, cliente: "Maria Souza", total: "30.00" },
+      { id: 2, cliente: "Ana Pereira", total: "58.00" },
+      { id: 3, cliente: "Carlos Mendes", total: "27.00" },
+      { id: 4, cliente: "João Silva", total: "28.00" }
     ];
     this.dataSource.paginator = this.paginator;
   }

@@ -36,22 +36,22 @@ hidePassword: any;
   }
 
   onSubmit() {
-    this.router.navigate(['/home']);
-    // if (this.loginForm.valid) {
-    //   this.erroLogin = null; // Limpa o erro antes de tentar logar
-    //   this.authService.login(this.loginForm.value).subscribe({
-    //     next: (success) => {
-    //       if (success) {
-    //         this.router.navigate(['/home']);
-    //       } else {
-    //         this.erroLogin = 'E-mail ou senha incorretos. Tente novamente.';
-    //       }
-    //     },
-    //     error: () => {
-    //       this.erroLogin = 'Erro ao tentar realizar login. Tente novamente mais tarde.';
-    //     }
-    //   });
-    // }
+    // this.router.navigate(['/home']);
+    if (this.loginForm.valid) {
+      this.erroLogin = null; // Limpa o erro antes de tentar logar
+      this.authService.login(this.loginForm.value).subscribe({
+        next: (success) => {
+          if (success) {
+            this.router.navigate(['/home']);
+          } else {
+            this.erroLogin = 'E-mail ou senha incorretos. Tente novamente.';
+          }
+        },
+        error: () => {
+          this.erroLogin = 'Erro ao tentar realizar login. Tente novamente mais tarde.';
+        }
+      });
+    }
   }
   
 }

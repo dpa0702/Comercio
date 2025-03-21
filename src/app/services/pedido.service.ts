@@ -20,7 +20,7 @@ export class PedidoService {
 
   atualizar(id: number, pedido: any): Observable<any> {
     pedido.id = id;
-    return this.http.put<any>(`${this.apiUrl}/${id}`, id);
+    return this.http.put<any>(`${this.apiUrl}/${id}`, pedido);
   }
 
   excluir(id: number): Observable<any> {

@@ -61,13 +61,19 @@ export class ClienteFormComponent {
 
     this.clienteForm.get('cpfcnpj')?.setValue(valor, { emitEvent: false });
   }
-
-  validarCPFCNPJ(control: any) {
-    const value = control.value?.replace(/\D/g, '');
-    if (!value || (value.length !== 11 && value.length !== 14)) {
-      return { cpfcnpjInvalido: true };
-    }
-    return null;
-  }
   
+  formatarTelefone() {
+    let valor = this.clienteForm.get('telefone')?.value;
+    valor = valor.replace(/\D/g, '');
+    
+    if (valor.length <= 11) {
+      valor = valor.replace(/^(\d{2})(\d{5})(\d{4})$/, '($1) $2-$3');
+    }
+    else{
+      valor = null;
+    }
+
+    this.clienteForm.get('telefone')?.setValue(valor, { emitEvent: false });
+  }
+
 }

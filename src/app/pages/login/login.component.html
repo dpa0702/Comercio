@@ -25,6 +25,8 @@
           Entrar
         </button>
 
+        <button mat-icon-button color="accent" (click)="abrirImpressao(pedido)">
+
         <mat-error *ngIf="erroLogin" class="erro-mensagem">
           {{ erroLogin }}
         </mat-error>

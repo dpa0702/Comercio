@@ -54,12 +54,12 @@ hidePassword: any;
     // }
   }
   
-  abrirImpressao(pedido: any) {
+  abrirImpressao() {
     const popupWin = window.open('', '_blank', 'width=600,height=800');
     const html = `
       <html>
         <head>
-          <title>Pedido ${pedido.id}</title>
+          <title>Pedido 123456</title>
           <style>
             @media print {
               @page { margin: 0; }
@@ -116,25 +116,28 @@ hidePassword: any;
           <div class="linha"></div>
 
           <div class="detalhe">
-            <strong>NF Nº:</strong> ${pedido.id}<br/>
-            <strong>Data:</strong> ${new Date(pedido.data).toLocaleString()}<br/>
-            <strong>Cliente:</strong> ${pedido.clienteNome}<br/>
-            <strong>CPF:</strong> ${pedido.cpfnanota || '---'}
+            <strong>NF Nº:</strong> 123456<br/>
+            <strong>Data:</strong> 01/01/0001<br/>
+            <strong>Cliente:</strong> Cliente Nome<br/>
+            <strong>CPF:CPF na nota </strong>
           </div>
 
           <div class="linha"></div>
 
-          <div><strong>Itens:</strong></div>
-          ${pedido.produtos.map((p: any, index: number) => `
+          <div><strong>Itens:</strong>
             <div class="produto">
-              <span>${index + 1}. Produto ${p.produto}</span>
-              <span>${p.quantidade} x R$ ${p.preco.toFixed(2)}</span>
+              <span>Produto 1: produto1 </span>
+              <span>Quantidade: 1</span>
             </div>
-          `).join('')}
-
+            <div class="produto">
+              <span>Produto 2: produto2 </span>
+              <span>Quantidade: 1</span>
+            </div>
+          </div>
+          
           <div class="linha"></div>
 
-          <div class="total">TOTAL: R$ ${pedido.total.toFixed(2)}</div>
+          <div class="total">TOTAL: R$ 10.00</div>
 
           <div class="linha"></div>
 

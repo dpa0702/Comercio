@@ -12,6 +12,7 @@ import { authInterceptor } from './app/interceptors/auth-interceptor.service';
 import { PedidoFormComponent } from './app/pages/pedidos/pedido-form/pedido-form.component';
 import { MeiosPagamentoComponent } from './app/pages/meios-pagamento/meios-pagamento.component';
 import { FuncionariosComponent } from './app/pages/funcionarios/funcionarios.component';
+import { PedidoClienteComponent } from './app/pages/pedidos/pedido-cliente/pedido-cliente.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -24,6 +25,7 @@ const routes: Routes = [
       { path: 'produtos', component: ProdutosComponent, canActivate: [AuthGuard] },
       { path: 'pedidos', component: PedidosComponent, canActivate: [AuthGuard] },
       { path: 'pedidos/pedidos-form', component: PedidoFormComponent, canActivate: [AuthGuard] },
+      { path: 'pedidos/pedido-cliente', component: PedidoClienteComponent, canActivate: [AuthGuard] },
       { path: 'funcionarios', component: FuncionariosComponent, canActivate: [AuthGuard] },
       { path: 'meios-pagamento', component: MeiosPagamentoComponent, canActivate: [AuthGuard] },
     ]

@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FuncionariosService } from '../../services/funcionarios.service';
 import { MatTableModule,MatTableDataSource } from '@angular/material/table';
@@ -10,6 +10,9 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { FuncionarioFormComponent } from './funcionario-form/funcionario-form.component';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSort } from '@angular/material/sort';
+import { MatSortModule } from '@angular/material/sort';
+import { getPortuguesePaginatorIntl } from '../../components/mat-paginator-intl-pt/mat-paginator-intl-pt';
 
 @Component({
   selector: 'app-funcionarios',
@@ -24,7 +27,11 @@ import { MatSelectModule } from '@angular/material/select';
     MatPaginatorModule,
     MatFormFieldModule,
     MatInputModule,
-    MatSelectModule
+    MatSelectModule,
+    MatSortModule
+  ],
+  providers: [
+    { provide: MatPaginatorIntl, useFactory: getPortuguesePaginatorIntl }
   ]
 })
 export class FuncionariosComponent implements OnInit, AfterViewInit {
@@ -32,6 +39,7 @@ export class FuncionariosComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource<any>([]);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(private funcionariosService: FuncionariosService, private dialog: MatDialog) {}
 
@@ -40,6 +48,7 @@ export class FuncionariosComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    this.dataSource.sort = this.sort; // Garante que o sort é definido após a view estar carregada
     this.dataSource.paginator = this.paginator; // Garante que o paginator é definido após a view estar carregada
   }
 

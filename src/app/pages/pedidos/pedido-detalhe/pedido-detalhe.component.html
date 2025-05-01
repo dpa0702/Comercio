@@ -1,0 +1,36 @@
+<h2 mat-dialog-title class="no-print">Baixa de Pagamento #{{ data.id }}</h2>
+<mat-dialog-content>
+  <div class="print-container">
+    <h3>Dados do Pedido: {{ data.id }}</h3>
+  <p><strong>Cliente:</strong> {{ data.clienteNome }}</p>
+  <p><strong>Data:</strong> {{ data.data | date:'dd/MM/yyyy HH:mm' }}</p>
+  <p><strong>Meio de Pagamento:</strong> {{ data.meioPagamento }}</p>
+    <h3>Produtos:</h3>
+    <table class="produtos-table" style="border-style: dotted;">
+      <thead>
+        <tr>
+          <!-- <th>ID</th> -->
+          <th>Produto</th>
+          <th>Quantidade</th>
+          <th>Preço</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of data.produtos">
+          <!-- <td>{{ item.produto }}</td> -->
+          <td>{{ item.nome }}</td>
+          <td>{{ item.quantidade }}</td>
+          <td>R$ {{ item.preco | number:'1.2-2' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  <p><strong>CPF:</strong> {{ data.cpfnanota }}</p>
+  <p><strong>Total:</strong> R$ {{ data.total | number:'1.2-2' }}</p>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button class="no-print" (click)="imprimir()">Imprimir</button>
+  <button mat-button class="no-print" (click)="fechar()">Fechar</button>
+</mat-dialog-actions>

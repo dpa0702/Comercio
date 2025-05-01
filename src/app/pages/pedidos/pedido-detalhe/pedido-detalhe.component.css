@@ -1,0 +1,34 @@
+.full-width {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+@media print {
+  body, html {
+    margin: 0;
+    padding: 0;
+  }
+
+  * {
+    box-shadow: none !important;
+    background: none !important;
+  }
+
+  @page {
+    margin: 0;
+  }
+
+  .print-container {
+    margin: 0;
+    padding: 0;
+    /* position: absolute; */
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+}

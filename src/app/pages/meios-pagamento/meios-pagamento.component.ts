@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FuncionariosService } from '../../services/funcionarios.service';
 import { MatTableModule,MatTableDataSource } from '@angular/material/table';
@@ -11,6 +11,9 @@ import { MeioPagamentoFormComponent } from './meio-pagamento-form/meio-pagamento
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MeiosPagamentoService } from '../../services/meios-pagamento.service';
+import { MatSort } from '@angular/material/sort';
+import { MatSortModule } from '@angular/material/sort';
+import { getPortuguesePaginatorIntl } from '../../components/mat-paginator-intl-pt/mat-paginator-intl-pt';
 
 @Component({
   selector: 'app-meios-pagamento',
@@ -25,7 +28,11 @@ import { MeiosPagamentoService } from '../../services/meios-pagamento.service';
     MatPaginatorModule,
     MatFormFieldModule,
     MatInputModule,
-    MatSelectModule
+    MatSelectModule,
+    MatSortModule
+  ],
+  providers: [
+    { provide: MatPaginatorIntl, useFactory: getPortuguesePaginatorIntl }
   ]
 })
 export class MeiosPagamentoComponent implements OnInit, AfterViewInit {
@@ -33,6 +40,7 @@ export class MeiosPagamentoComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource<any>([]);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(private meiosPagamentoService: MeiosPagamentoService, private dialog: MatDialog) {}
 
@@ -41,6 +49,7 @@ export class MeiosPagamentoComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    this.dataSource.sort = this.sort; // Garante que o sort é definido após a view estar carregada
     this.dataSource.paginator = this.paginator; // Garante que o paginator é definido após a view estar carregada
   }
 

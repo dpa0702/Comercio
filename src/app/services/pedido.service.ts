@@ -1,17 +1,25 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class PedidoService {
-  private apiUrl = 'https://localhost:7258/api/pedidos'; // Ajuste conforme sua API
+  // private apiUrl = 'https://localhost:7258/api/pedidos'; // Ajuste conforme sua API
+  // private apiUrl = 'http://192.168.15.146:92/api/pedidos';
+  private apiUrl = `${environment.apiUrl}/pedidos`;
 
   constructor(private http: HttpClient) {}
 
   listar(): Observable<any[]> {
-    return this.http.get<any[]>(this.apiUrl);
+    return this.http.get<any[]>(this.apiUrl + '?status=true');
+  }
+
+  listarPorCliente(id: number): Observable<any[]> {
+    return this.http.get<any[]>(this.apiUrl + '/Cliente/APrazo/' + id + '?status=true');
   }
 
   adicionar(pedido: any): Observable<any> {

@@ -1,15 +1,20 @@
-import { MatCardModule } from '@angular/material/card';
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatTableModule, MatTableDataSource } from '@angular/material/table';
+import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
+import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ClienteService } from '../../services/cliente.service';
 import { ClienteFormComponent } from './cliente-form/cliente-form.component';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSort } from '@angular/material/sort';
+import { MatSortModule } from '@angular/material/sort';
+import { Router } from '@angular/router';
+import { getPortuguesePaginatorIntl } from '../../components/mat-paginator-intl-pt/mat-paginator-intl-pt';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-clientes',
@@ -25,22 +30,33 @@ import { MatSelectModule } from '@angular/material/select';
     MatPaginatorModule,
     MatFormFieldModule,
     MatInputModule,
-    MatSelectModule
+    MatSelectModule,
+    MatSortModule,
+    MatIconModule
+  ],
+  providers: [
+    { provide: MatPaginatorIntl, useFactory: getPortuguesePaginatorIntl }
   ]
 })
+
 export class ClientesComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['id', 'nome', 'email', 'cpfcnpj', 'telefone', 'acoes'];
   dataSource = new MatTableDataSource<any>([]);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private clienteService: ClienteService, private dialog: MatDialog) {}
+  constructor(private clienteService: ClienteService, 
+    private dialog: MatDialog,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.carregarClientes(); // Apenas obtém os clientes, sem subscrição direta
   }
 
   ngAfterViewInit(): void {
+    this.dataSource.sort = this.sort; // Garante que o sort é definido após a view estar carregada
     this.dataSource.paginator = this.paginator; // Garante que o paginator é definido após a view estar carregada
   }
   
@@ -58,7 +74,6 @@ export class ClientesComponent implements OnInit, AfterViewInit {
               ];
         }
     });
-    
   }
 
   aplicarFiltro(event: Event) {
@@ -88,5 +103,14 @@ export class ClientesComponent implements OnInit, AfterViewInit {
       }
     });
   }
-  
+
+  novoPedido(id: number, cpfcnpj: string) {
+    // alert("Carrega uma tela para novo pedido do cliente com id: " + id);
+    this.router.navigate(['/home/pedidos/pedidos-form'], { queryParams: { id, cpfcnpj } });
+  }
+
+  consultaHistorico(id: number, nome: string) {
+    this.router.navigate(['/home/pedidos/pedido-cliente'], { queryParams: { id, nome } });
+  }
+
 }

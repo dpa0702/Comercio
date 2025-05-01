@@ -3,12 +3,15 @@ import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ProdutoService } from '../../services/produto.service';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ProdutoFormComponent } from './produto-form/produto-form.component';
+import { MatSort } from '@angular/material/sort';
+import { MatSortModule } from '@angular/material/sort';
+import { getPortuguesePaginatorIntl } from '../../components/mat-paginator-intl-pt/mat-paginator-intl-pt';
 
 @Component({
   selector: 'app-produtos',
@@ -23,7 +26,11 @@ import { ProdutoFormComponent } from './produto-form/produto-form.component';
     MatDialogModule,
     MatPaginatorModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    MatSortModule
+  ],
+  providers: [
+    { provide: MatPaginatorIntl, useFactory: getPortuguesePaginatorIntl }
   ]
 })
 export class ProdutosComponent implements OnInit {
@@ -31,6 +38,7 @@ export class ProdutosComponent implements OnInit {
   dataSource = new MatTableDataSource<any>([]);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(private produtoService: ProdutoService, 
     private dialog: MatDialog) {}
@@ -40,6 +48,7 @@ export class ProdutosComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
+    this.dataSource.sort = this.sort; // Garante que o sort é definido após a view estar carregada
     this.dataSource.paginator = this.paginator; // Garante que o paginator é definido após a view estar carregada
   }
 

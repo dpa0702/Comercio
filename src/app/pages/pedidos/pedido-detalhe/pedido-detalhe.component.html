@@ -1,36 +1,55 @@
 <h2 mat-dialog-title class="no-print">Baixa de Pagamento #{{ data.id }}</h2>
 <mat-dialog-content>
-  <div class="print-container">
-    <h3>Dados do Pedido: {{ data.id }}</h3>
-  <p><strong>Cliente:</strong> {{ data.clienteNome }}</p>
-  <p><strong>Data:</strong> {{ data.data | date:'dd/MM/yyyy HH:mm' }}</p>
-  <p><strong>Meio de Pagamento:</strong> {{ data.meioPagamento }}</p>
-    <h3>Produtos:</h3>
-    <table class="produtos-table" style="border-style: dotted;">
-      <thead>
-        <tr>
-          <!-- <th>ID</th> -->
-          <th>Produto</th>
-          <th>Quantidade</th>
-          <th>Preço</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let item of data.produtos">
-          <!-- <td>{{ item.produto }}</td> -->
-          <td>{{ item.nome }}</td>
-          <td>{{ item.quantidade }}</td>
-          <td>R$ {{ item.preco | number:'1.2-2' }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+    <div class="print-container">
+      <h3>Dados do Pedido: {{ data.id }}</h3>
+    <p><strong>Cliente:</strong> {{ data.clienteNome }}</p>
+    <p><strong>CPF:</strong> {{ data.cpfnanota }}</p>
+    <p><strong>Data:</strong> {{ data.data | date:'dd/MM/yyyy HH:mm' }}</p>
+      <h3>Produtos:</h3>
+      <table class="produtos-table" style="border-style: dotted;">
+        <thead>
+          <tr>
+            <!-- <th>ID</th> -->
+            <th>Produto</th>
+            <th>Quantidade</th>
+            <th>Preço</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of data.produtos">
+            <!-- <td>{{ item.produto }}</td> -->
+            <td>{{ item.nome }}</td>
+            <td>{{ item.quantidade }}</td>
+            <td>R$ {{ item.preco | number:'1.2-2' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <form [formGroup]="pedidoDetalheForm">
+      <p>
+        <mat-form-field class="full-width">
+          <mat-label>Meio de Pagamento</mat-label>
+          <mat-select formControlName="meioPagamento" > 
+            <mat-option *ngFor="let meioPagamento of meiosPagamentoDisponiveis" [value]="meioPagamento.id">
+              {{ meioPagamento.nome }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </p>
+
+      <p>
+        <mat-form-field class="preco-field">
+          <mat-label>Valor Recebido</mat-label>
+          <input matInput type="number" formControlName="valorRecebido" value="0">
+        </mat-form-field>
+      </p>
+    </form>
   
-  <p><strong>CPF:</strong> {{ data.cpfnanota }}</p>
-  <p><strong>Total:</strong> R$ {{ data.total | number:'1.2-2' }}</p>
+  <p>
+    <strong>Total:</strong> R$ {{ data.total | number:'1.2-2' }}
+  </p>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-button class="no-print" (click)="imprimir()">Imprimir</button>
-  <button mat-button class="no-print" (click)="fechar()">Fechar</button>
+  <button mat-button class="no-print" (click)="salvar()">Salvar</button>
 </mat-dialog-actions>

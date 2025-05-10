@@ -43,8 +43,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  // row: any;
-
+  
   constructor(private pedidoService: PedidoService, 
     private dialog: MatDialog, 
     private router: Router) {}

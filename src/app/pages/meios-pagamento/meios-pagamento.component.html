@@ -1,0 +1,37 @@
+<mat-card>
+    <h2>Meios de Pagamento</h2>
+  
+    <mat-form-field class="full-width">
+      <mat-label>Pesquisar</mat-label>
+      <input matInput (keyup)="aplicarFiltro($event)" placeholder="Digite para filtrar">
+    </mat-form-field>
+  
+    <button mat-raised-button color="primary" (click)="abrirFormulario()">Novo Meio de Pagamento</button>
+  
+    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+        <td mat-cell *matCellDef="let produto">{{ produto.id }}</td>
+      </ng-container>
+  
+      <ng-container matColumnDef="nome">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Nome</th>
+        <td mat-cell *matCellDef="let produto">{{ produto.nome }}</td>
+      </ng-container>
+  
+      <ng-container matColumnDef="acoes">
+        <th mat-header-cell *matHeaderCellDef>Ações</th>
+        <td mat-cell *matCellDef="let produto">
+          <button mat-button color="accent" (click)="abrirFormulario(produto)">Editar</button>
+          <button mat-button color="warn" (click)="excluir(produto.id)">Excluir</button>
+        </td>
+      </ng-container>
+  
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  
+    <!-- Paginação -->
+    <mat-paginator [pageSize]="8" [pageSizeOptions]="[8, 16, 32]" showFirstLastButtons></mat-paginator>
+  </mat-card>
+  

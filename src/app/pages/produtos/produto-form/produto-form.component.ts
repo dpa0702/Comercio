@@ -28,7 +28,9 @@ export class ProdutoFormComponent {
   }
 
   salvar() {
-    this.dialogRef.close(this.produtoForm.value);
+    if (this.produtoForm.valid) {
+      this.dialogRef.close(this.produtoForm.value);
+    }
   }
 
   fechar() {

@@ -7,7 +7,7 @@
     </mat-form-field>
 
     <mat-form-field class="full-width">
-      <mat-label>CPF/CNPJ</mat-label>
+      <mat-label>CPF/CNPJ.</mat-label>
       <input matInput formControlName="cpfcnpj" (input)="formatarCPFCNPJ()" maxlength="18">
     </mat-form-field>
 
@@ -18,7 +18,7 @@
 
     <mat-form-field class="full-width">
       <mat-label>Telefone</mat-label>
-      <input matInput type="telefone" formControlName="telefone">
+      <input matInput formControlName="telefone" (input)="formatarTelefone()" maxlength="15">
     </mat-form-field>
   </form>
 </mat-dialog-content>

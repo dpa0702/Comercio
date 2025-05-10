@@ -2,13 +2,17 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class AuthService {
-  private apiUrl = 'https://localhost:7258/api/auth'; // Ajuste para sua API
+  // private apiUrl = 'https://localhost:7258/api/auth'; // Ajuste para sua API
+  // private apiUrl = 'http://192.168.15.146:92/api/auth';
+  private apiUrl = `${environment.apiUrl}/auth`;
+  
   private authState = new BehaviorSubject<boolean>(this.temToken());
 
   constructor(private http: HttpClient) {}

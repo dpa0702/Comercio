@@ -9,7 +9,7 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, ne
   const router = inject(Router);
   const token = localStorage.getItem('token');
 
-  if (token) {
+  if (token && !req.headers.has('Authorization')) {
     req = req.clone({
       setHeaders: {
         Authorization: `Bearer ${token}`

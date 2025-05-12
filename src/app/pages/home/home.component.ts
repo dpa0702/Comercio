@@ -26,7 +26,22 @@ import { Router } from '@angular/router';
 })
 
 export class HomeComponent {
+  menuAberto = true;
+  temaEscuro = false;
+
   constructor(private authService: AuthService, private router: Router) {}
+
+  alternarMenu() {
+    this.menuAberto = !this.menuAberto;
+  }
+
+  alternarTema() {
+    this.temaEscuro = !this.temaEscuro;
+
+    const body = document.body;
+    body.classList.toggle('dark-theme', this.temaEscuro);
+    body.classList.toggle('light-theme', !this.temaEscuro);
+  }
 
   logout(){
     this.authService.logout();

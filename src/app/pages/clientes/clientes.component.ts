@@ -40,7 +40,7 @@ import { MatIconModule } from '@angular/material/icon';
 })
 
 export class ClientesComponent implements OnInit, AfterViewInit {
-  displayedColumns: string[] = ['id', 'nome', 'email', 'cpfcnpj', 'telefone', 'acoes'];
+  displayedColumns: string[] = ['id', 'nome', 'email', 'cpfcnpj', 'telefone', 'isrevendedor', 'acoes'];
   dataSource = new MatTableDataSource<any>([]);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -67,10 +67,10 @@ export class ClientesComponent implements OnInit, AfterViewInit {
       if(data.length == 0)
         {
           this.dataSource.data = [
-                { id: 1, nome: "João Silva", email: "joao@email.com", cpfcnpj: "00000000000", telefone: "(11) 99999-9999" },
-                { id: 2, nome: "Maria Souza", email: "maria@email.com", cpfcnpj: "00000000000", telefone: "(11) 99999-9999" },
-                { id: 3, nome: "Carlos Mendes", email: "carlos@email.com", cpfcnpj: "00000000000", telefone: "(11) 99999-9999" },
-                { id: 4, nome: "Ana Pereira", email: "ana@email.com", cpfcnpj: "00000000000", telefone: "(11) 99999-9999" }
+                { id: 1, nome: "João Silva", email: "joao@email.com", cpfcnpj: "00000000000", telefone: "(11) 99999-9999", isrevendedor: false },
+                { id: 2, nome: "Maria Souza", email: "maria@email.com", cpfcnpj: "00000000000", telefone: "(11) 99999-9999", isrevendedor: true },
+                { id: 3, nome: "Carlos Mendes", email: "carlos@email.com", cpfcnpj: "00000000000", telefone: "(11) 99999-9999", isrevendedor: false },
+                { id: 4, nome: "Ana Pereira", email: "ana@email.com", cpfcnpj: "00000000000", telefone: "(11) 99999-9999", isrevendedor: true },
               ];
         }
     });
@@ -104,9 +104,9 @@ export class ClientesComponent implements OnInit, AfterViewInit {
     });
   }
 
-  novoPedido(id: number, cpfcnpj: string) {
+  novoPedido(id: number, cpfcnpj: string, isrevendedor: boolean) {
     // alert("Carrega uma tela para novo pedido do cliente com id: " + id);
-    this.router.navigate(['/home/pedidos/pedidos-form'], { queryParams: { id, cpfcnpj } });
+    this.router.navigate(['/home/pedidos/pedidos-form'], { queryParams: { id, cpfcnpj, isrevendedor } });
   }
 
   consultaHistorico(id: number, nome: string) {

@@ -24,6 +24,11 @@
       <td mat-cell *matCellDef="let produto">R$ {{ produto.preco | number:'1.2-2' }}</td>
     </ng-container>
 
+    <ng-container matColumnDef="precorevendedor">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Preço Revendedor</th>
+      <td mat-cell *matCellDef="let produto">R$ {{ produto.precorevendedor | number:'1.2-2' }}</td>
+    </ng-container>
+
     <ng-container matColumnDef="acoes">
       <th mat-header-cell *matHeaderCellDef>Ações</th>
       <td mat-cell *matCellDef="let produto">

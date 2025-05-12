@@ -39,6 +39,7 @@ export class PedidoFormComponent {
   total: number = 0;
   mostrarValorRecebido = false;
   troco = 0;
+  revendedor = false;
 
   constructor(
     private clienteService: ClienteService,
@@ -61,7 +62,9 @@ export class PedidoFormComponent {
       total: [0],
       cpfnanota: [null],
       troco: [0],
-      valorRecebido: [null]
+      valorRecebido: [null],
+      Observacoes: [''],
+      revendedor: [false],
     });
     
   }
@@ -75,7 +78,8 @@ export class PedidoFormComponent {
       cpfnanota: [null],
       troco: [0],
       valorRecebido: [null],
-      Observacoes: ['']
+      Observacoes: [''],
+      revendedor: [false],
     });
     this.carregarClientes();
     this.carregarProdutos();
@@ -87,18 +91,20 @@ export class PedidoFormComponent {
     this.route.queryParams.subscribe(params => {
       const clienteId = params['id'];
       const cpfcnpj = params['cpfcnpj'];
+      const revendedor = params['isrevendedor'];
       if (clienteId) {
-        this.selecionarCliente(clienteId, cpfcnpj);
+        this.selecionarCliente(clienteId, cpfcnpj, revendedor);
       }
       else{
-        this.selecionarCliente(1, 'Não Identificado');
+        this.selecionarCliente(1, 'Não Identificado', false);
       }
     });
   }
 
-  selecionarCliente(clienteId: number, cpfcnpj: string) {
+  selecionarCliente(clienteId: number, cpfcnpj: string, isrevendedor: boolean) {
     this.pedidoForm.get('cliente')?.setValue(Number(clienteId));
     this.pedidoForm.patchValue({ cpfnanota: cpfcnpj });
+    this.pedidoForm.patchValue({ revendedor: isrevendedor });
   }
 
   mostrarEntrada(meioPagamentoId: any) {
@@ -207,7 +213,12 @@ export class PedidoFormComponent {
   atualizarPreco(produtoForm: any, produtoId: any) {
     const produto = this.produtosDisponiveis.find(p => p.id === produtoId);
     if (produto) {
-      produtoForm.patchValue({ preco: produto.preco });
+      const revendedor = this.pedidoForm.get('revendedor')?.value;
+      if (revendedor) {
+        produtoForm.patchValue({ preco: produto.precorevendedor });
+      } else {
+        produtoForm.patchValue({ preco: produto.preco });
+      }
     }
     this.calcularTotal();
   }
@@ -227,6 +238,7 @@ export class PedidoFormComponent {
     const cliente = this.clientes.find(c => c.id === clienteId);
     if (cliente) {
       this.pedidoForm.patchValue({ cpfnanota: cliente.cpfcnpj });
+      this.pedidoForm.patchValue({ revendedor: cliente.isrevendedor });
     }
   }
 

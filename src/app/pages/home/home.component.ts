@@ -27,7 +27,7 @@ import { Router } from '@angular/router';
 
 export class HomeComponent {
   menuAberto = true;
-  temaEscuro = false;
+  temaEscuro = true;
 
   constructor(private authService: AuthService, private router: Router) {}
 

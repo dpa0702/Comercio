@@ -239,6 +239,11 @@ export class PedidoFormComponent {
     if (cliente) {
       this.pedidoForm.patchValue({ cpfnanota: cliente.cpfcnpj });
       this.pedidoForm.patchValue({ revendedor: cliente.isrevendedor });
+      this.produtos.clear();
+      this.pedidoForm.get('meioPagamento')?.setValue(0);
+      this.pedidoForm.get('troco')?.setValue(0);
+      this.pedidoForm.get('valorRecebido')?.setValue(0);
+      this.calcularTotal();
     }
   }
 

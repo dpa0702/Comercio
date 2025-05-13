@@ -17,6 +17,8 @@
       <input matInput formControlName="cpfnanota" (input)="formatarCPFCNPJ()" maxlength="18">
     </mat-form-field>
 
+    <input hidden id="hdnrevendedor" formControlName="revendedor">
+
       <div class="linha-separada">
       <div formArrayName="produtos">
         <div *ngFor="let produtoCtrl of produtos.controls; let i = index;" [formGroupName]="i" class="produto-item">

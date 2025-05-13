@@ -6,13 +6,20 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-cliente-form',
   standalone: true,
   templateUrl: './cliente-form.component.html',
   styleUrls: ['./cliente-form.component.css'],
-  imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatDialogModule]
+  imports: [CommonModule, 
+    ReactiveFormsModule, 
+    MatFormFieldModule, 
+    MatInputModule, 
+    MatButtonModule, 
+    MatDialogModule,
+    MatCheckboxModule]
 })
 export class ClienteFormComponent {
   clienteForm: FormGroup;
@@ -24,9 +31,10 @@ export class ClienteFormComponent {
   ) {
     this.clienteForm = this.fb.group({
       nome: [data?.nome || '', Validators.required],
-      cpfcnpj: [data?.cpfcnpj || '', Validators.required],
-      email: [data?.email || '', [Validators.required, Validators.email]],
-      telefone: [data?.telefone || '', [Validators.required]]
+      cpfcnpj: [data?.cpfcnpj || ''],
+      email: [data?.email || ''],
+      telefone: [data?.telefone || ''],
+      isrevendedor: [data?.isrevendedor || false],
     });
   }
 

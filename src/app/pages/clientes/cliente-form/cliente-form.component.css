@@ -1,5 +1,21 @@
 .full-width {
-    width: 100%;
-    margin-bottom: 10px;
-  }
-  
+  width: 100%;
+}
+
+.half-width {
+  width: 48%;
+  margin-right: 4%;
+}
+
+.form-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.checkbox-align {
+  margin-top: 1.5rem;
+  border-color: white !important;
+  background-color: transparent !important;
+}

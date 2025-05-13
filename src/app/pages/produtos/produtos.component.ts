@@ -34,7 +34,7 @@ import { getPortuguesePaginatorIntl } from '../../components/mat-paginator-intl-
   ]
 })
 export class ProdutosComponent implements OnInit {
-  displayedColumns: string[] = ['id', 'nome', 'preco', 'acoes'];
+  displayedColumns: string[] = ['id', 'nome', 'preco', 'precorevendedor', 'acoes'];
   dataSource = new MatTableDataSource<any>([]);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -59,12 +59,12 @@ export class ProdutosComponent implements OnInit {
       if(data.length == 0)
         {
           this.dataSource.data = [
-                { id: 1, nome: "Jumbo Branco1", preco: "29.00" },
-                { id: 2, nome: "Extra Branco2", preco: "27.00" },
-                { id: 3, nome: "Grande Branco3", preco: "25.00" },
-                { id: 4, nome: "Jumbo Vermelho", preco: "30.00" },
-                { id: 5, nome: "Extra Vermelho", preco: "28.00" },
-                { id: 6, nome: "Grande Vermelho", preco: "26.00" },
+                { id: 1, nome: "Jumbo Branco1", preco: "29.00", precorevendedor: "28.00" },
+                { id: 2, nome: "Extra Branco2", preco: "27.00", precorevendedor: "26.00" },
+                { id: 3, nome: "Grande Branco3", preco: "25.00", precorevendedor: "24.00" },
+                { id: 4, nome: "Jumbo Vermelho", preco: "30.00", precorevendedor: "29.00" },
+                { id: 5, nome: "Extra Vermelho", preco: "28.00", precorevendedor: "27.00" },
+                { id: 6, nome: "Grande Vermelho", preco: "26.00", precorevendedor: "25.00" },
               ];
         }
     });

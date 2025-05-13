@@ -32,7 +32,15 @@
     <ng-container matColumnDef="telefone">
       <th mat-header-cell *matHeaderCellDef>Telefone</th>
       <td mat-cell *matCellDef="let cliente">{{ cliente.telefone }}</td>
+    </ng-container>
 
+    <ng-container matColumnDef="isrevendedor">
+      <th mat-header-cell *matHeaderCellDef>É Revendedor?</th>
+      <td mat-cell *matCellDef="let cliente">
+          <!-- {{ cliente.isrevendedor ? 'Sim' : 'Não' }} -->
+        <mat-icon *ngIf="cliente.isrevendedor" color="accent">star</mat-icon>
+        <span *ngIf="!cliente.isrevendedor">—</span>
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="acoes">
@@ -40,7 +48,7 @@
       <td mat-cell *matCellDef="let cliente">
         <button mat-button color="accent" (click)="abrirFormulario(cliente)">Editar</button>
         <button mat-button color="warn" (click)="excluir(cliente.id)">Excluir</button>
-        <button mat-button color="warn" (click)="novoPedido(cliente.id, cliente.cpfcnpj);"><mat-icon>shopping_cart</mat-icon>Novo Pedido</button>
+        <button mat-button color="warn" (click)="novoPedido(cliente.id, cliente.cpfcnpj, cliente.isrevendedor);"><mat-icon>shopping_cart</mat-icon>Novo Pedido</button>
         <button mat-button color="warn" (click)="consultaHistorico(cliente.id, cliente.nome);">À Prazo</button>
       </td>
     </ng-container>

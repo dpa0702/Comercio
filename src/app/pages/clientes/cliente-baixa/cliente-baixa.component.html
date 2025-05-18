@@ -1,0 +1,38 @@
+<h2 mat-dialog-title class="no-print">Baixa de Pagamento</h2>
+<mat-dialog-content>
+    <div class="print-container">
+      <h3>Dados do Cliente: {{ data.id }}</h3>
+    <p><strong>Nome:</strong> {{ data.nome }}</p>
+    <p><strong>CPF:</strong> {{ data.cpfcnpj }}</p>
+    <p><strong>Telefone:</strong> {{ data.telefone }}</p>
+    <p><strong>E-mail:</strong> {{ data.email }}</p>
+
+    </div>
+    <form [formGroup]="clienteBaixaForm">
+      <p>
+        <mat-form-field class="full-width">
+          <mat-label>Meio de Pagamento</mat-label>
+          <mat-select formControlName="meioPagamento" > 
+            <mat-option *ngFor="let meioPagamento of meiosPagamentoDisponiveis" [value]="meioPagamento.id">
+              {{ meioPagamento.nome }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </p>
+
+      <p>
+        <mat-form-field class="full-width">
+          <mat-label>Valor Recebido</mat-label>
+          <input matInput type="number" formControlName="valorRecebido" value="0" pattern="^[0-9]+$"  (input)="limpaValores($event)">
+        </mat-form-field>
+      </p>
+    </form>
+  
+  <p>
+    <strong>Saldo:</strong> {{ data.saldo | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
+  </p>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button class="no-print" (click)="salvar()" [disabled]="clienteBaixaForm.invalid">Salvar</button>
+</mat-dialog-actions>

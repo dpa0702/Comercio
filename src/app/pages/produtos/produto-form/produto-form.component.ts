@@ -23,7 +23,8 @@ export class ProdutoFormComponent {
   ) {
     this.produtoForm = this.fb.group({
       nome: [data?.nome || '', Validators.required],
-      preco: [data?.preco || '', Validators.required]
+      preco: [data?.preco || '', Validators.required],
+      precorevendedor: [data?.precorevendedor],
     });
   }
 

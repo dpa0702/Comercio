@@ -47,7 +47,15 @@ button {
     padding: 10px;
     margin: auto;
     text-align: center;
-  } 
+  }
+
+  .isrevendedor-field {
+    width: 100%;
+    max-width: 200px;
+    padding: 10px;
+    margin: auto;
+    text-align: center;
+  }
   
   .total-card {
     margin-top: 20px;

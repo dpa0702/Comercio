@@ -22,4 +22,15 @@ private iv = CryptoJS.enc.Utf8.parse('940D3B783F25790D'); // IV de 16 bytes
     });
     return encrypted.toString();
   }
+
+  decrypt(encrypted: string): string {
+    const bytes = CryptoJS.AES.decrypt(encrypted, this.key, {
+      iv: this.iv,
+      mode: CryptoJS.mode.CBC,
+      padding: CryptoJS.pad.Pkcs7
+    });
+    const decrypted = bytes.toString(CryptoJS.enc.Utf8);
+    return decrypted;
+  }
+
 }

@@ -36,11 +36,17 @@ export class HomeComponent {
   }
 
   alternarTema() {
-    this.temaEscuro = !this.temaEscuro;
+  this.temaEscuro = !this.temaEscuro;
 
-    const body = document.body;
-    body.classList.toggle('dark-theme', this.temaEscuro);
-    body.classList.toggle('light-theme', !this.temaEscuro);
+  const body = document.body;
+
+  if (this.temaEscuro) {
+      body.classList.add('tema-escuro');
+      body.classList.remove('tema-claro');
+    } else {
+      body.classList.add('tema-claro');
+      body.classList.remove('tema-escuro');
+    }
   }
 
   logout(){

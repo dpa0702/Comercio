@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component } from "@angular/core";
+import { Component, LOCALE_ID } from "@angular/core";
 import { ReactiveFormsModule, FormGroup, FormBuilder, Validators, FormArray } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MatFormFieldModule } from "@angular/material/form-field";
@@ -14,6 +14,13 @@ import { PedidoService } from '../../../services/pedido.service';
 import { Router } from '@angular/router';
 import { MeiosPagamentoService } from "../../../services/meios-pagamento.service";
 import { ActivatedRoute } from '@angular/router';
+import { CryptoService } from '../../../services/crypto.service';
+import { registerLocaleData } from '@angular/common';
+import ptBr from '@angular/common/locales/pt';
+import { MatPaginatorIntl } from "@angular/material/paginator";
+import { getPortuguesePaginatorIntl } from "../../../components/mat-paginator-intl-pt/mat-paginator-intl-pt";
+
+registerLocaleData(ptBr);
 
 @Component({
   selector: 'app-pedido-form',
@@ -28,7 +35,11 @@ import { ActivatedRoute } from '@angular/router';
     MatDialogModule,
     MatSelectModule,
     MatIcon,
-    MatCard]
+    MatCard],
+  providers: [
+    { provide: LOCALE_ID, useValue: 'pt-BR' },
+    { provide: MatPaginatorIntl, useFactory: getPortuguesePaginatorIntl }
+  ]
 })
 
 export class PedidoFormComponent {
@@ -48,7 +59,8 @@ export class PedidoFormComponent {
     private meiosPagamentoService: MeiosPagamentoService,
     private fb: FormBuilder,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private cryptoService: CryptoService
   ) {
     this.pedidoForm = this.fb.group({
       cliente: [null, Validators.required],
@@ -65,6 +77,7 @@ export class PedidoFormComponent {
       valorRecebido: [null],
       Observacoes: [''],
       revendedor: [false],
+      txtsaldo: [null],
     });
     
   }
@@ -80,6 +93,7 @@ export class PedidoFormComponent {
       valorRecebido: [null],
       Observacoes: [''],
       revendedor: [false],
+      txtsaldo: [null],
     });
     this.carregarClientes();
     this.carregarProdutos();
@@ -89,22 +103,27 @@ export class PedidoFormComponent {
 
   preencherFormulario() {
     this.route.queryParams.subscribe(params => {
-      const clienteId = params['id'];
-      const cpfcnpj = params['cpfcnpj'];
-      const revendedor = params['isrevendedor'];
-      if (clienteId) {
-        this.selecionarCliente(clienteId, cpfcnpj, revendedor);
+      if (params['query']) {
+        const [clienteIdStr, cpfcnpj, revendedorStr, saldoStr] = this.cryptoService.decrypt(params['query']).split('|');
+        const clienteId = Number(clienteIdStr);
+        const saldoS = Number(saldoStr);
+        const isRevendedor = revendedorStr === 'true';
+        if (clienteId) {
+          this.selecionarCliente(clienteId, cpfcnpj, isRevendedor, saldoS);
+        }
       }
       else{
-        this.selecionarCliente(1, 'Não Identificado', false);
+        this.selecionarCliente(1, 'Não Identificado', false, 0);
       }
     });
   }
 
-  selecionarCliente(clienteId: number, cpfcnpj: string, isrevendedor: boolean) {
+  selecionarCliente(clienteId: number, cpfcnpj: string, isrevendedor: boolean, saldoM: number) {
     this.pedidoForm.get('cliente')?.setValue(Number(clienteId));
     this.pedidoForm.patchValue({ cpfnanota: cpfcnpj });
     this.pedidoForm.patchValue({ revendedor: isrevendedor });
+    this.pedidoForm.patchValue({ txtsaldo: "" + 
+      new Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL', minimumFractionDigits: 2}).format(saldoM) });
   }
 
   mostrarEntrada(meioPagamentoId: any) {
@@ -239,6 +258,8 @@ export class PedidoFormComponent {
     if (cliente) {
       this.pedidoForm.patchValue({ cpfnanota: cliente.cpfcnpj });
       this.pedidoForm.patchValue({ revendedor: cliente.isrevendedor });
+      this.pedidoForm.patchValue({ txtsaldo: "R$ " + 
+        new Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL', minimumFractionDigits: 2}).format(cliente.saldo) });
       this.produtos.clear();
       this.pedidoForm.get('meioPagamento')?.setValue(0);
       this.pedidoForm.get('troco')?.setValue(0);

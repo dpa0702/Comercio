@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
+import { CommonModule, registerLocaleData } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
@@ -12,6 +12,9 @@ import { ProdutoFormComponent } from './produto-form/produto-form.component';
 import { MatSort } from '@angular/material/sort';
 import { MatSortModule } from '@angular/material/sort';
 import { getPortuguesePaginatorIntl } from '../../components/mat-paginator-intl-pt/mat-paginator-intl-pt';
+import ptBr from '@angular/common/locales/pt';
+
+registerLocaleData(ptBr);
 
 @Component({
   selector: 'app-produtos',
@@ -30,6 +33,7 @@ import { getPortuguesePaginatorIntl } from '../../components/mat-paginator-intl-
     MatSortModule
   ],
   providers: [
+    { provide: LOCALE_ID, useValue: 'pt-BR' },
     { provide: MatPaginatorIntl, useFactory: getPortuguesePaginatorIntl }
   ]
 })

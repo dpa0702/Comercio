@@ -34,6 +34,11 @@ export class ClienteService {
     return this.http.put<any>(`${this.apiUrl}/${id}`, cliente);
   }
 
+  atualizarSaldo(id: number, cliente: any): Observable<any> {
+    // alert(cliente.meioPagamento + ' - ' + cliente.valorRecebido);
+    return this.http.put<any>(`${this.apiUrl}/AtualizarSaldo/${id}`, cliente);
+  }
+
   excluir(id: number): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/${id}`);
   }

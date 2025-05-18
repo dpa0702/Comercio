@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, LOCALE_ID } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -15,6 +15,12 @@ import { MatSortModule } from '@angular/material/sort';
 import { Router } from '@angular/router';
 import { getPortuguesePaginatorIntl } from '../../components/mat-paginator-intl-pt/mat-paginator-intl-pt';
 import { MatIconModule } from '@angular/material/icon';
+import { ClienteBaixaComponent } from './cliente-baixa/cliente-baixa.component';
+import { CryptoService } from '../../services/crypto.service';
+import { registerLocaleData } from '@angular/common';
+import ptBr from '@angular/common/locales/pt';
+
+registerLocaleData(ptBr);
 
 @Component({
   selector: 'app-clientes',
@@ -35,6 +41,7 @@ import { MatIconModule } from '@angular/material/icon';
     MatIconModule
   ],
   providers: [
+    { provide: LOCALE_ID, useValue: 'pt-BR' },
     { provide: MatPaginatorIntl, useFactory: getPortuguesePaginatorIntl }
   ]
 })
@@ -48,7 +55,8 @@ export class ClientesComponent implements OnInit, AfterViewInit {
 
   constructor(private clienteService: ClienteService, 
     private dialog: MatDialog,
-    private router: Router
+    private router: Router,
+    private cryptoService: CryptoService
   ) {}
 
   ngOnInit(): void {
@@ -104,9 +112,16 @@ export class ClientesComponent implements OnInit, AfterViewInit {
     });
   }
 
-  novoPedido(id: number, cpfcnpj: string, isrevendedor: boolean) {
-    // alert("Carrega uma tela para novo pedido do cliente com id: " + id);
-    this.router.navigate(['/home/pedidos/pedidos-form'], { queryParams: { id, cpfcnpj, isrevendedor } });
+  mostrarBaixa(cliente: any) {
+      this.dialog.open(ClienteBaixaComponent, {
+        width: '600px',
+        data: cliente
+      });
+    }
+
+  novoPedido(id: number, cpfcnpj: string, isrevendedor: boolean, saldo: number) {
+    const query = this.cryptoService.encrypt(id.toString() + "|" + cpfcnpj + "|" + isrevendedor.toString() + "|" + saldo.toString());
+    this.router.navigate(['/home/pedidos/pedidos-form'], { queryParams: { query } });
   }
 
   consultaHistorico(id: number, nome: string) {

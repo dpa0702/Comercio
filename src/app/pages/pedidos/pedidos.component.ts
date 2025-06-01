@@ -15,6 +15,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatSortModule } from '@angular/material/sort';
 import { getPortuguesePaginatorIntl } from '../../components/mat-paginator-intl-pt/mat-paginator-intl-pt';
 import ptBr from '@angular/common/locales/pt';
+import * as QRCode from 'qrcode';
 
 registerLocaleData(ptBr);
 
@@ -68,8 +69,48 @@ export class PedidosComponent implements OnInit, AfterViewInit {
     });
   }
 
-  abrirImpressao(pedido: any) {
+  async abrirImpressao(pedido: any) {
     const popupWin = window.open('', '_blank', 'width=600,height=800');
+
+    const conteudoQRCode = pedido.observacoes.replace('NFe', '').trim();
+    const numeroFormatado = conteudoQRCode.replace(/\s+/g, '').match(new RegExp(`.{1,${4}}`, 'g'))?.join(' ') ?? conteudoQRCode;
+
+    const gerarQRCode = async (texto: string): Promise<string> => {
+      try {
+        return await QRCode.toDataURL(texto);
+      } catch (err) {
+        console.error('Erro ao gerar QR Code:', err);
+        return '';
+      }
+    };
+
+    let observacoesHtml = '';
+
+    if (pedido.observacoes && pedido.observacoes.includes('NFe')) {
+      const linkBase = 'https://www.nfe.fazenda.gov.br/portal/consultaRecaptcha.aspx?chNFe=${chave}';
+      const chaveNFe = conteudoQRCode.replace('NFe', '').trim();
+      const linkFormatted = `<a href="${linkBase}${chaveNFe}" target="_blank">${chaveNFe}</a>`;
+      const qrCodeBase64 = await gerarQRCode(linkFormatted);
+      observacoesHtml = `
+        <div class="qr-container">
+          <img src="${qrCodeBase64}" alt="QR Code" style="width:150px;height:150px;" />
+          <div class="linha"></div>
+        </div>
+        <div class="qr-container">
+          <div class="codigo-formatado">${numeroFormatado}</div>
+          <div class="linha"></div>
+        </div>
+      `;
+    } else {
+      observacoesHtml = `
+        <div class="detalhe">
+          <strong>Observações:</strong> ${pedido.observacoes || '---'}
+          <div class="linha"></div>
+        </div>
+      `;
+    }
+
+
     const html = `
       <html>
         <head>
@@ -117,17 +158,27 @@ export class PedidosComponent implements OnInit, AfterViewInit {
               text-align: center;
               font-size: 9pt;
             }
+            .qr-container {
+              display: flex;
+              justify-content: center;
+              margin: 10px 0;
+            }
+            .qr-container img {
+              width: 150px;
+              height: 150px;
+            }
+
           </style>
         </head>
         <body onload="window.print(); window.close();">
           <div class="titulo">
-            DISTRIBUIDORA DE OVOS SÃO LUCAS LTDA<br/>
-            CNPJ: 46.837.625/0001-03<br/>
-            IE: 136.302.995.113<br/>
-            Avenida do Oratório, 2571<br/>
-            Parque São Lucas - São Paulo - SP<br/>
-            Telefone: (11) 91550-1501<br/>
-            E-mail: ovossaolucas@gmail.com<br/>
+            GREGO DISTRIBUIDORA DE OVOS LTDA<br/>
+            CNPJ: 55.803.661/0001-47<br/>
+            IE: 137.919.347.115<br/>
+            Avenida Doutor Gentil de Moura, 139<br/>
+            Ipiranga - São Paulo - SP<br/>
+            Telefone: (11) 97514-1963<br/>
+            E-mail: gdovos@gmail.com<br/>
           </div>
 
           <div class="linha"></div>
@@ -136,7 +187,8 @@ export class PedidosComponent implements OnInit, AfterViewInit {
             <strong>NF Nº:</strong> ${pedido.id}<br/>
             <strong>Data:</strong> ${new Date(pedido.data).toLocaleString()}<br/>
             <strong>Cliente:</strong> ${pedido.clienteNome}<br/>
-            <strong>CPF:</strong> ${pedido.cpfnanota || '---'}
+            <strong>CPF:</strong> ${pedido.cpfnanota || '---'}<br/>
+            <strong>Endereço:</strong> ${pedido.email || '---'}
           </div>
 
           <div class="linha"></div>
@@ -159,9 +211,8 @@ export class PedidosComponent implements OnInit, AfterViewInit {
           <div class="detalhe">
             <strong>Forma de Pagamento:</strong> ${pedido.meioPagamento}<br/>
           </div>
-          <div class="detalhe">
-            <strong>Observações:</strong> ${pedido.observacoes || '---'}
-          <div class="linha"></div>
+
+          ${observacoesHtml}
 
           <div class="footer">
             Documento sem valor fiscal<br/>
@@ -180,15 +231,6 @@ export class PedidosComponent implements OnInit, AfterViewInit {
     this.pedidoService.listar().subscribe(data => {
       this.dataSource.data = data;
       this.dataSource.paginator = this.paginator;
-      if(data.length == 0)
-        {
-          this.dataSource.data = [
-                { id: 1, clienteNome: "Maria Souza", data: "01/01/2000", meioPagamento: "Dinheiro", total: "30.00", status: true },
-                { id: 2, clienteNome: "Ana Pereira", data: "01/01/2000", meioPagamento: "À Prazo", total: "58.00", status: false },
-                { id: 3, clienteNome: "Carlos Mendes", data: "01/01/2000", meioPagamento: "Cartão", total: "27.00", status: true },
-                { id: 4, clienteNome: "João Silva", data: "01/01/2000", meioPagamento: "Dinheiro", total: "28.00", status: false }
-              ];
-        }
     });
   }
 

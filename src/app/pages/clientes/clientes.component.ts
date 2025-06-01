@@ -72,15 +72,6 @@ export class ClientesComponent implements OnInit, AfterViewInit {
     this.clienteService.listar().subscribe(data => {
       this.dataSource.data = data;
       this.dataSource.paginator = this.paginator;
-      if(data.length == 0)
-        {
-          this.dataSource.data = [
-                { id: 1, nome: "João Silva", email: "joao@email.com", cpfcnpj: "00000000000", telefone: "(11) 99999-9999", isrevendedor: false },
-                { id: 2, nome: "Maria Souza", email: "maria@email.com", cpfcnpj: "00000000000", telefone: "(11) 99999-9999", isrevendedor: true },
-                { id: 3, nome: "Carlos Mendes", email: "carlos@email.com", cpfcnpj: "00000000000", telefone: "(11) 99999-9999", isrevendedor: false },
-                { id: 4, nome: "Ana Pereira", email: "ana@email.com", cpfcnpj: "00000000000", telefone: "(11) 99999-9999", isrevendedor: true },
-              ];
-        }
     });
   }
 

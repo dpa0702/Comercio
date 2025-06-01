@@ -95,9 +95,9 @@ export class PedidoClienteComponent implements OnInit, AfterViewInit {
       this.dataSource.data = data;
       this.dataSource.paginator = this.paginator;
       if(data.length == 0)
-        {
-          alert("Nenhum pedido encontrado para o cliente selecionado.");
-        }
+      {
+        alert("Nenhum pedido encontrado para o cliente selecionado.");
+      }
     });
   }
 

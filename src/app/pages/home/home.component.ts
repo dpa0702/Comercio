@@ -29,24 +29,25 @@ export class HomeComponent {
   menuAberto = true;
   temaEscuro = true;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService, 
+    private router: Router
+  ) {}
 
   alternarMenu() {
     this.menuAberto = !this.menuAberto;
   }
 
   alternarTema() {
-  this.temaEscuro = !this.temaEscuro;
-
-  const body = document.body;
-
-  if (this.temaEscuro) {
-      body.classList.add('tema-escuro');
-      body.classList.remove('tema-claro');
-    } else {
-      body.classList.add('tema-claro');
-      body.classList.remove('tema-escuro');
-    }
+  // this.temaEscuro = !this.temaEscuro;
+  // const body = document.body;
+  // if (this.temaEscuro) {
+  //     body.classList.add('dark-theme');
+  //     body.classList.remove('light-theme');
+  //   } else {
+  //     body.classList.add('light-theme');
+  //     body.classList.remove('dark-theme');
+  //   }
   }
 
   logout(){

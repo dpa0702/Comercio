@@ -72,8 +72,9 @@ export class PedidosComponent implements OnInit, AfterViewInit {
   async abrirImpressao(pedido: any) {
     const popupWin = window.open('', '_blank', 'width=600,height=800');
 
-    const conteudoQRCode = pedido.observacoes.replace('NFe', '').trim();
-    const numeroFormatado = conteudoQRCode.replace(/\s+/g, '').match(new RegExp(`.{1,${4}}`, 'g'))?.join(' ') ?? conteudoQRCode;
+    const conteudoQRCode = pedido.observacoes.trim();
+    const parametros = conteudoQRCode.split('?')[1].replace("p=", "");    
+    const numeroFormatado = parametros.split('|')[0].replace(/\s+/g, '').match(new RegExp(`.{1,${4}}`, 'g'))?.join(' ');   
 
     const gerarQRCode = async (texto: string): Promise<string> => {
       try {
@@ -86,10 +87,8 @@ export class PedidosComponent implements OnInit, AfterViewInit {
 
     let observacoesHtml = '';
 
-    if (pedido.observacoes && pedido.observacoes.includes('NFe')) {
-      const linkBase = 'https://www.nfe.fazenda.gov.br/portal/consultaRecaptcha.aspx?chNFe=${chave}';
-      const chaveNFe = conteudoQRCode.replace('NFe', '').trim();
-      const linkFormatted = `<a href="${linkBase}${chaveNFe}" target="_blank">${chaveNFe}</a>`;
+    if (pedido.observacoes && pedido.observacoes.includes('?p=')) {
+      const linkFormatted = `<a href="${conteudoQRCode}" target="_blank">${conteudoQRCode}</a>`;
       const qrCodeBase64 = await gerarQRCode(linkFormatted);
       observacoesHtml = `
         <div class="qr-container">

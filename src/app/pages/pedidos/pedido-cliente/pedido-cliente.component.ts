@@ -66,15 +66,6 @@ export class PedidoClienteComponent implements OnInit, AfterViewInit {
       const nome = params['nome'];
 
       this.carregarPedidos(clienteId);
-
-    //   alert(clienteId);
-    //   alert(nome);
-    //   if (clienteId) {
-    //     this.selecionarCliente(clienteId, cpfcnpj);
-    //   }
-    //   else{
-    //     this.selecionarCliente(1, 'Não Identificado');
-    //   }
     });
   }
 

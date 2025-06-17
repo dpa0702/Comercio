@@ -69,25 +69,26 @@ export class PedidosComponent implements OnInit, AfterViewInit {
     });
   }
 
+  async printar(pedido: any){
+    alert(pedido.observacoes);
+  };
+
   async abrirImpressao(pedido: any) {
     const popupWin = window.open('', '_blank', 'width=600,height=800');
-
-    const conteudoQRCode = pedido.observacoes.trim();
-    const parametros = conteudoQRCode.split('?')[1].replace("p=", "");    
-    const numeroFormatado = parametros.split('|')[0].replace(/\s+/g, '').match(new RegExp(`.{1,${4}}`, 'g'))?.join(' ');   
-
-    const gerarQRCode = async (texto: string): Promise<string> => {
-      try {
-        return await QRCode.toDataURL(texto);
-      } catch (err) {
-        console.error('Erro ao gerar QR Code:', err);
-        return '';
-      }
-    };
-
     let observacoesHtml = '';
 
     if (pedido.observacoes && pedido.observacoes.includes('?p=')) {
+      const conteudoQRCode = pedido.observacoes.trim();
+      const parametros = conteudoQRCode.split('?')[1].replace("p=", "");    
+      const numeroFormatado = parametros.split('|')[0].replace(/\s+/g, '').match(new RegExp(`.{1,${4}}`, 'g'))?.join(' ');   
+      const gerarQRCode = async (texto: string): Promise<string> => {
+        try {
+          return await QRCode.toDataURL(texto);
+        } catch (err) {
+          console.error('Erro ao gerar QR Code:', err);
+          return '';
+        }
+      };
       const linkFormatted = `<a href="${conteudoQRCode}" target="_blank">${conteudoQRCode}</a>`;
       const qrCodeBase64 = await gerarQRCode(linkFormatted);
       observacoesHtml = `
@@ -108,7 +109,6 @@ export class PedidosComponent implements OnInit, AfterViewInit {
         </div>
       `;
     }
-
 
     const html = `
       <html>

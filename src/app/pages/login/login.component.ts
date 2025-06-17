@@ -35,7 +35,7 @@ export class LoginComponent {
     private router: Router,
     private cryptoService: CryptoService) {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.required, Validators.minLength(5)]],
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
   }

@@ -13,6 +13,7 @@ import { PedidoFormComponent } from './app/pages/pedidos/pedido-form/pedido-form
 import { MeiosPagamentoComponent } from './app/pages/meios-pagamento/meios-pagamento.component';
 import { FuncionariosComponent } from './app/pages/funcionarios/funcionarios.component';
 import { PedidoClienteComponent } from './app/pages/pedidos/pedido-cliente/pedido-cliente.component';
+import { RelatoriosComponent } from './app/pages/relatorios/relatorios.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -28,6 +29,7 @@ const routes: Routes = [
       { path: 'pedidos/pedido-cliente', component: PedidoClienteComponent, canActivate: [AuthGuard] },
       { path: 'funcionarios', component: FuncionariosComponent, canActivate: [AuthGuard] },
       { path: 'meios-pagamento', component: MeiosPagamentoComponent, canActivate: [AuthGuard] },
+      { path: 'relatorios', component: RelatoriosComponent, canActivate: [AuthGuard] },
     ]
   },
   { path: '', redirectTo: 'login', pathMatch: 'full' },

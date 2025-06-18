@@ -7,21 +7,25 @@
     </mat-form-field>
 
     <mat-form-field class="full-width">
-      <mat-label>CPF/CNPJ.</mat-label>
+      <mat-label>CPF/CNPJ</mat-label>
       <input matInput formControlName="cpfcnpj" (input)="formatarCPFCNPJ()" maxlength="18">
     </mat-form-field>
 
     <mat-form-field class="full-width">
-      <mat-label>Email</mat-label>
+      <mat-label>Endereço</mat-label>
       <input matInput type="email" formControlName="email">
     </mat-form-field>
 
-    <mat-form-field class="full-width">
-      <mat-label>Telefone</mat-label>
-      <input matInput formControlName="telefone" (input)="formatarTelefone()" maxlength="15">
-    </mat-form-field>
+    <div class="form-row">
+      <mat-form-field class="half-width">
+        <mat-label>Telefone</mat-label>
+        <input matInput formControlName="telefone" (input)="formatarTelefone()" maxlength="15">
+      </mat-form-field>
+      <mat-checkbox formControlName="isrevendedor" class="checkbox-align">É Revendedor?</mat-checkbox>
+    </div>
   </form>
 </mat-dialog-content>
+
 <mat-dialog-actions align="end">
   <button mat-button (click)="fechar()">Cancelar</button>
   <button mat-raised-button color="primary" (click)="salvar()" [disabled]="clienteForm.invalid">Salvar</button>

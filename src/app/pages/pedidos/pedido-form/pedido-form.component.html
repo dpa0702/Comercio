@@ -17,6 +17,13 @@
       <input matInput formControlName="cpfnanota" (input)="formatarCPFCNPJ()" maxlength="18">
     </mat-form-field>
 
+    <mat-form-field class="preco-width">
+      <mat-label>Saldo</mat-label>
+      <input matInput formControlName="txtsaldo" readonly>
+    </mat-form-field>
+
+    <input hidden id="hdnrevendedor" formControlName="revendedor">
+
       <div class="linha-separada">
       <div formArrayName="produtos">
         <div *ngFor="let produtoCtrl of produtos.controls; let i = index;" [formGroupName]="i" class="produto-item">
@@ -24,7 +31,7 @@
             <mat-label>Produto</mat-label>
             <mat-select formControlName="produto">
               <mat-option *ngFor="let produto of produtosDisponiveis" [value]="produto.id">
-                {{ produto.nome }} - R$ {{ produto.preco }}
+                {{ produto.nome }} - {{ produto.preco | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
               </mat-option>
             </mat-select>
           </mat-form-field>
@@ -64,14 +71,15 @@
         <mat-label>Valor Recebido</mat-label>
         <input matInput type="number" formControlName="valorRecebido" (input)="calcularTroco()" value="0">
       </mat-form-field>
+
     </div>
 
     <mat-card class="total-card">
-      <h3>Total: R$ {{ total | number: '1.2-2' }}</h3>
+      <h3>Total: {{ total | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</h3>
     </mat-card>
 
     <mat-card class="total-card" *ngIf="mostrarValorRecebido">
-      <h3>Troco: R$ {{ troco | number: '1.2-2' }}</h3>
+      <h3>Troco: {{ troco | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</h3>
     </mat-card>
 
     <button mat-raised-button color="accent" type="submit" [disabled]="pedidoForm.invalid">

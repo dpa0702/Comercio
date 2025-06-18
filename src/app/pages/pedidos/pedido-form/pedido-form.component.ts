@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component } from "@angular/core";
+import { Component, LOCALE_ID } from "@angular/core";
 import { ReactiveFormsModule, FormGroup, FormBuilder, Validators, FormArray } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MatFormFieldModule } from "@angular/material/form-field";
@@ -14,6 +14,15 @@ import { PedidoService } from '../../../services/pedido.service';
 import { Router } from '@angular/router';
 import { MeiosPagamentoService } from "../../../services/meios-pagamento.service";
 import { ActivatedRoute } from '@angular/router';
+import { CryptoService } from '../../../services/crypto.service';
+import { registerLocaleData } from '@angular/common';
+import ptBr from '@angular/common/locales/pt';
+import { MatPaginatorIntl } from "@angular/material/paginator";
+import { getPortuguesePaginatorIntl } from "../../../components/mat-paginator-intl-pt/mat-paginator-intl-pt";
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
+registerLocaleData(ptBr);
 
 @Component({
   selector: 'app-pedido-form',
@@ -28,7 +37,13 @@ import { ActivatedRoute } from '@angular/router';
     MatDialogModule,
     MatSelectModule,
     MatIcon,
-    MatCard]
+    MatCard,
+    MatSnackBarModule
+  ],
+  providers: [
+    { provide: LOCALE_ID, useValue: 'pt-BR' },
+    { provide: MatPaginatorIntl, useFactory: getPortuguesePaginatorIntl }
+  ]
 })
 
 export class PedidoFormComponent {
@@ -39,6 +54,7 @@ export class PedidoFormComponent {
   total: number = 0;
   mostrarValorRecebido = false;
   troco = 0;
+  revendedor = false;
 
   constructor(
     private clienteService: ClienteService,
@@ -47,7 +63,9 @@ export class PedidoFormComponent {
     private meiosPagamentoService: MeiosPagamentoService,
     private fb: FormBuilder,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private cryptoService: CryptoService,
+    private snackBar: MatSnackBar,
   ) {
     this.pedidoForm = this.fb.group({
       cliente: [null, Validators.required],
@@ -61,7 +79,10 @@ export class PedidoFormComponent {
       total: [0],
       cpfnanota: [null],
       troco: [0],
-      valorRecebido: [null]
+      valorRecebido: [null],
+      Observacoes: [''],
+      revendedor: [false],
+      txtsaldo: [null],
     });
     
   }
@@ -75,7 +96,9 @@ export class PedidoFormComponent {
       cpfnanota: [null],
       troco: [0],
       valorRecebido: [null],
-      Observacoes: ['']
+      Observacoes: [''],
+      revendedor: [false],
+      txtsaldo: [null],
     });
     this.carregarClientes();
     this.carregarProdutos();
@@ -85,20 +108,27 @@ export class PedidoFormComponent {
 
   preencherFormulario() {
     this.route.queryParams.subscribe(params => {
-      const clienteId = params['id'];
-      const cpfcnpj = params['cpfcnpj'];
-      if (clienteId) {
-        this.selecionarCliente(clienteId, cpfcnpj);
+      if (params['query']) {
+        const [clienteIdStr, cpfcnpj, revendedorStr, saldoStr] = this.cryptoService.decrypt(params['query']).split('|');
+        const clienteId = Number(clienteIdStr);
+        const saldoS = Number(saldoStr);
+        const isRevendedor = revendedorStr === 'true';
+        if (clienteId) {
+          this.selecionarCliente(clienteId, cpfcnpj, isRevendedor, saldoS);
+        }
       }
       else{
-        this.selecionarCliente(1, 'Não Identificado');
+        this.selecionarCliente(1, 'Não Identificado', false, 0);
       }
     });
   }
 
-  selecionarCliente(clienteId: number, cpfcnpj: string) {
+  selecionarCliente(clienteId: number, cpfcnpj: string, isrevendedor: boolean, saldoM: number) {
     this.pedidoForm.get('cliente')?.setValue(Number(clienteId));
     this.pedidoForm.patchValue({ cpfnanota: cpfcnpj });
+    this.pedidoForm.patchValue({ revendedor: isrevendedor });
+    this.pedidoForm.patchValue({ txtsaldo: "" + 
+      new Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL', minimumFractionDigits: 2}).format(saldoM) });
   }
 
   mostrarEntrada(meioPagamentoId: any) {
@@ -133,22 +163,90 @@ export class PedidoFormComponent {
     if (this.pedidoForm.valid) {
       this.calcularTotal(); // Garante que o total esteja atualizado
       const pedido = this.pedidoForm.value;
+
+
+      // pedido.produtos = pedido.produtos.map((produto: any) => {
+      //   return {
+      //     produto: produto.produto.id,
+      //     nome: produto.produto.nome,
+      //     quantidade: produto.quantidade,
+      //     preco: produto.preco
+      //   };
+      // });
+
+
       if(pedido.valorRecebido !== null && pedido.valorRecebido !== undefined
         && pedido.troco !== null && pedido.troco !== undefined) {
         pedido.observacoes = 'Valor Recebido: ' + pedido.valorRecebido.toFixed(2)
           + ' | Troco: ' + this.troco.toFixed(2);
       }
-      console.log('Pedido salvo:', pedido);
-  
-      this.pedidoService.adicionar(pedido).subscribe({
-        next: (res) => {
-          console.log('Pedido adicionado com sucesso:', res);
-          this.router.navigate(['/home/pedidos']);
-        },
-        error: (err) => {
-          console.error('Erro ao adicionar pedido:', err);
-        }
-      });
+
+      if(pedido.meioPagamento === 2) {
+        const verificaStatusSefaz = this.pedidoService.verificaStatusSefaz().subscribe(
+          data => {
+            console.log('Status da Sefaz:', data);
+            if (data.mensagem === true) {
+              this.pedidoService.adicionar(pedido).subscribe({
+                next: (res) => {
+                  this.snackBar.open('Pedido adicionado com sucesso!', 'Fechar', { duration: 3000 });
+                  console.log('Pedido adicionado com sucesso:', res);
+                  this.router.navigate(['/home/pedidos']);
+                },
+                error: (err) => {
+                  console.error('Erro ao adicionar pedido:', err);
+                  if (err.status === 400) {
+                    // Exemplo: erro de validação vindo do backend
+                    if (err.error && typeof err.error === 'string') {
+                      alert('Erro: ' + err.error); // Mensagem simples
+                    } else if (err.error && err.error.errors) {
+                      // Exemplo: erro de validação em formato mais estruturado
+                      const mensagens = Object.values(err.error.errors).flat();
+                      alert('Erros: \n' + mensagens.join('\n'));
+                    } else {
+                      alert('Requisição inválida. Verifique os dados informados.');
+                    }
+                  } else {
+                    alert('Erro inesperado. Tente novamente mais tarde.');
+                  }
+                }
+              });
+            } else {
+              // alert('Sefaz está fora do ar.');
+            }
+          },
+          error => {
+            console.error('Erro ao verificar status da Sefaz:', error);
+            alert('Erro ao verificar status da Sefaz.');
+          }
+        );
+      }
+      else {
+        this.pedidoService.adicionar(pedido).subscribe({
+          next: (res) => {
+            this.snackBar.open('Pedido adicionado com sucesso!', 'Fechar', { duration: 3000 });
+            console.log('Pedido adicionado com sucesso:', res);
+            this.router.navigate(['/home/pedidos']);
+          },
+          error: (err) => {
+            console.error('Erro ao adicionar pedido:', err);
+            if (err.status === 400) {
+              // Exemplo: erro de validação vindo do backend
+              if (err.error && typeof err.error === 'string') {
+                // alert('Erro: ' + err.error); // Mensagem simples
+                this.snackBar.open('Não é possível criar um pedido à prazo para o cliente padrão.', 'Fechar', { duration: 5000 });
+              } else if (err.error && err.error.errors) {
+                // Exemplo: erro de validação em formato mais estruturado
+                const mensagens = Object.values(err.error.errors).flat();
+                alert('Erros: \n' + mensagens.join('\n'));
+              } else {
+                alert('Requisição inválida. Verifique os dados informados.');
+              }
+            } else {
+              alert('Erro inesperado. Tente novamente mais tarde.');
+            }
+          }
+        });
+      }
     }
   }
 
@@ -168,14 +266,6 @@ export class PedidoFormComponent {
     this.meiosPagamentoService.listar().subscribe(data => {
       this.meiosPagamentoDisponiveis = data;
     });
-    if(this.meiosPagamentoDisponiveis.length == 0){
-      this.meiosPagamentoDisponiveis = this.meiosPagamentoDisponiveis = [
-        { id: 1, nome: "Dinheiro" },
-        { id: 2, nome: "Cartão de Crédito" },
-        { id: 3, nome: "PIX" },
-        { id: 4, nome: "Boleto" }
-      ];
-    }
   }
 
   get produtos(): FormArray {
@@ -207,7 +297,12 @@ export class PedidoFormComponent {
   atualizarPreco(produtoForm: any, produtoId: any) {
     const produto = this.produtosDisponiveis.find(p => p.id === produtoId);
     if (produto) {
-      produtoForm.patchValue({ preco: produto.preco });
+      const revendedor = this.pedidoForm.get('revendedor')?.value;
+      if (revendedor) {
+        produtoForm.patchValue({ preco: produto.precorevendedor });
+      } else {
+        produtoForm.patchValue({ preco: produto.preco });
+      }
     }
     this.calcularTotal();
   }
@@ -227,6 +322,14 @@ export class PedidoFormComponent {
     const cliente = this.clientes.find(c => c.id === clienteId);
     if (cliente) {
       this.pedidoForm.patchValue({ cpfnanota: cliente.cpfcnpj });
+      this.pedidoForm.patchValue({ revendedor: cliente.isrevendedor });
+      this.pedidoForm.patchValue({ txtsaldo: "R$ " + 
+        new Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL', minimumFractionDigits: 2}).format(cliente.saldo) });
+      this.produtos.clear();
+      this.pedidoForm.get('meioPagamento')?.setValue(0);
+      this.pedidoForm.get('troco')?.setValue(0);
+      this.pedidoForm.get('valorRecebido')?.setValue(0);
+      this.calcularTotal();
     }
   }
 

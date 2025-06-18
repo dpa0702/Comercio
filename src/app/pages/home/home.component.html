@@ -1,5 +1,5 @@
 <mat-sidenav-container class="main-container">
-  <mat-sidenav mode="side" opened>
+  <mat-sidenav #sidenav mode="side" [opened]="menuAberto">
     <mat-toolbar>Menu</mat-toolbar>
     <mat-nav-list>
       <a mat-list-item routerLink="clientes">
@@ -34,10 +34,17 @@
 
   <mat-sidenav-content>
     <mat-toolbar color="primary">
-      <span>Sistema de Comércio</span>
+      <button mat-icon-button (click)="alternarMenu()">
+        <mat-icon>{{ menuAberto ? 'chevron_left' : 'menu' }}</mat-icon>
+      </button>
+      <span>GREGO DISTRIBUIDORA DE OVOS LTDA</span>
+      <span class="spacer"></span>
+      <button mat-icon-button (click)="alternarTema()">
+        <mat-icon>{{ temaEscuro ? 'dark_mode' : 'light_mode' }}</mat-icon>
+      </button>
     </mat-toolbar>    
     <div class="content">
-      <router-outlet></router-outlet> <!-- ESTE ELEMENTO É ESSENCIAL -->
+      <router-outlet></router-outlet>
     </div>
   </mat-sidenav-content>
 </mat-sidenav-container>

@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild, AfterViewInit  } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, ViewChild, AfterViewInit, LOCALE_ID  } from '@angular/core';
+import { CommonModule, registerLocaleData } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -14,9 +14,10 @@ import { PedidoDetalheComponent } from '../pedido-detalhe/pedido-detalhe.compone
 import { MatSort } from '@angular/material/sort';
 import { MatSortModule } from '@angular/material/sort';
 import { getPortuguesePaginatorIntl } from '../../../components/mat-paginator-intl-pt/mat-paginator-intl-pt';
-
 import { ActivatedRoute } from '@angular/router';
-import { A } from '@angular/cdk/keycodes';
+import ptBr from '@angular/common/locales/pt';
+
+registerLocaleData(ptBr);
 
 @Component({
   selector: 'app-pedido-cliente',
@@ -35,12 +36,14 @@ import { A } from '@angular/cdk/keycodes';
     MatSortModule
     ],
     providers: [
+      { provide: LOCALE_ID, useValue: 'pt-BR' },
       { provide: MatPaginatorIntl, useFactory: getPortuguesePaginatorIntl }
     ]
 })
 
 export class PedidoClienteComponent implements OnInit, AfterViewInit {
-  displayedColumns: string[] = ['id', 'data', 'clienteNome', 'meioPagamento', 'cpfnanota', 'total', 'detalhes'];
+  // displayedColumns: string[] = ['id', 'data', 'clienteNome', 'meioPagamento', 'cpfnanota', 'total', 'detalhes'];
+  displayedColumns: string[] = ['id', 'data', 'clienteNome', 'meioPagamento', 'cpfnanota', 'total'];
   expandedElement: any | null = null;
   dataSource = new MatTableDataSource<any>([]);
 
@@ -63,15 +66,6 @@ export class PedidoClienteComponent implements OnInit, AfterViewInit {
       const nome = params['nome'];
 
       this.carregarPedidos(clienteId);
-
-    //   alert(clienteId);
-    //   alert(nome);
-    //   if (clienteId) {
-    //     this.selecionarCliente(clienteId, cpfcnpj);
-    //   }
-    //   else{
-    //     this.selecionarCliente(1, 'Não Identificado');
-    //   }
     });
   }
 
@@ -92,9 +86,9 @@ export class PedidoClienteComponent implements OnInit, AfterViewInit {
       this.dataSource.data = data;
       this.dataSource.paginator = this.paginator;
       if(data.length == 0)
-        {
-          alert("Nenhum pedido encontrado para o cliente selecionado.");
-        }
+      {
+        alert("Nenhum pedido encontrado para o cliente selecionado.");
+      }
     });
   }
 

@@ -56,15 +56,6 @@ export class FuncionariosComponent implements OnInit, AfterViewInit {
     this.funcionariosService.listar().subscribe(data => {
       this.dataSource.data = data;
       this.dataSource.paginator = this.paginator;
-      if(data.length == 0)
-        {
-          this.dataSource.data = [
-                { id: 1, nome: "1João Silva", cargo: "Cargo A", salario: "1.500" },
-                { id: 2, nome: "2Maria Souza", cargo: "Cargo B", salario: "1.500" },
-                { id: 3, nome: "3Carlos Mendes", cargo: "Cargo C", salario: "1.500" },
-                { id: 4, nome: "4Ana Pereira", cargo: "Cargo D", salario: "1.500" }
-              ];
-        }
     });
   }
 

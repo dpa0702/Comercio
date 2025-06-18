@@ -11,6 +11,7 @@ export class PedidoService {
   // private apiUrl = 'https://localhost:7258/api/pedidos'; // Ajuste conforme sua API
   // private apiUrl = 'http://192.168.15.146:92/api/pedidos';
   private apiUrl = `${environment.apiUrl}/pedidos`;
+  private apiUrlauth = `${environment.apiUrl}/auth`;
 
   constructor(private http: HttpClient) {}
 
@@ -24,6 +25,11 @@ export class PedidoService {
 
   adicionar(pedido: any): Observable<any> {
     return this.http.post<any>(this.apiUrl, pedido);
+  }
+
+  verificaStatusSefaz(): Observable<any> {
+    // alert(this.apiUrlauth + '/VerificaStatusSefaz');
+    return this.http.get<any>(this.apiUrlauth + '/VerificaStatusSefaz');
   }
 
   atualizar(id: number, pedido: any): Observable<any> {

@@ -18,6 +18,10 @@ export class MeiosPagamentoService {
     return this.http.get<any[]>(this.apiUrl);
   }
 
+  listarCaixa(): Observable<any[]> {
+    return this.http.get<any[]>(this.apiUrl + '/ObterSaldosPorMeioPagamento');
+  }
+
   listarExcetoAPrazo(): Observable<any[]> {
     return this.http.get<any[]>(this.apiUrl + '/Exceto/APrazo');
   }

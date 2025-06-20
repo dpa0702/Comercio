@@ -52,14 +52,6 @@ export class ClienteBaixaComponent {
     this.meiosPagamentoService.listarExcetoAPrazo().subscribe(data => {
       this.meiosPagamentoDisponiveis = data;
     });
-    if(this.meiosPagamentoDisponiveis.length == 0){
-      this.meiosPagamentoDisponiveis = this.meiosPagamentoDisponiveis = [
-        { id: 1, nome: "Dinheiro" },
-        { id: 2, nome: "Cartão de Crédito" },
-        { id: 3, nome: "PIX" },
-        { id: 4, nome: "Boleto" }
-      ];
-    }
   }
 
   salvar() {

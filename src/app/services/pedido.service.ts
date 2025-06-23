@@ -19,6 +19,10 @@ export class PedidoService {
     return this.http.get<any[]>(this.apiUrl + '?status=true');
   }
 
+listarAPrazoDia(): Observable<any[]> {
+    return this.http.get<any[]>(this.apiUrl + '/Pedidos/APrazoDia');
+  }
+
   listarPorCliente(id: number): Observable<any[]> {
     return this.http.get<any[]>(this.apiUrl + '/Cliente/APrazo/' + id + '?status=true');
   }

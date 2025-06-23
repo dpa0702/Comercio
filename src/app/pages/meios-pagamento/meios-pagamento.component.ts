@@ -2,7 +2,6 @@ import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatPaginator, MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { FuncionariosService } from '../../services/funcionarios.service';
 import { MatTableModule,MatTableDataSource } from '@angular/material/table';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
@@ -57,17 +56,6 @@ export class MeiosPagamentoComponent implements OnInit, AfterViewInit {
     this.meiosPagamentoService.listar().subscribe(data => {
       this.dataSource.data = data;
       this.dataSource.paginator = this.paginator;
-      if(data.length == 0)
-        {
-          this.dataSource.data = [
-                { id: 1, nome: "À prazo" },
-                { id: 2, nome: "Dinheiro" },
-                { id: 3, nome: "Cartão" },
-                { id: 4, nome: "Máquina A" },
-                { id: 5, nome: "Máquina B" },
-                { id: 6, nome: "Máquina C" }
-              ];
-        }
     });
   }
 

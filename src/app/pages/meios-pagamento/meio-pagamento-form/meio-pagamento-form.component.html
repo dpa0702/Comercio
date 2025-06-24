@@ -1,12 +1,13 @@
 <h2 mat-dialog-title>{{ data ? 'Editar Meio de Pagemnto' : 'Novo Meio de Pagemnto' }}</h2>
-
 <mat-dialog-content>
   <form [formGroup]="MeiosPagamentoForm">
-    <mat-form-field class="full-width">
-      <mat-label>Nome do Meio de Pagamento</mat-label>
-      <input matInput formControlName="nome">
-    </mat-form-field>
-    <mat-checkbox formControlName="isgeranfce" class="checkbox-align">Gera NFce?</mat-checkbox>
+    <div class="form-row">
+      <mat-form-field class="half-width">
+        <mat-label>Nome do Meio de Pagamento</mat-label>
+        <input matInput formControlName="nome">
+      </mat-form-field>
+      <mat-checkbox formControlName="isgeranfce" class="checkbox-align">Gera NFce?</mat-checkbox>
+    </div>
   </form>
 </mat-dialog-content>
 

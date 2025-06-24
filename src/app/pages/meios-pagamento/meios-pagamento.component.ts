@@ -35,7 +35,7 @@ import { getPortuguesePaginatorIntl } from '../../components/mat-paginator-intl-
   ]
 })
 export class MeiosPagamentoComponent implements OnInit, AfterViewInit {
-  displayedColumns: string[] = ['id', 'nome', 'acoes'];
+  displayedColumns: string[] = ['id', 'nome', 'isgeranfce', 'acoes'];
   dataSource = new MatTableDataSource<any>([]);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;

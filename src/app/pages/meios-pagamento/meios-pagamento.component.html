@@ -18,6 +18,11 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Nome</th>
         <td mat-cell *matCellDef="let produto">{{ produto.nome }}</td>
       </ng-container>
+
+      <ng-container matColumnDef="isgeranfce">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Gera NFce</th>
+        <td mat-cell *matCellDef="let produto">{{ produto.isgeranfce ? 'Sim' : 'Não' }}</td>
+      </ng-container>
   
       <ng-container matColumnDef="acoes">
         <th mat-header-cell *matHeaderCellDef>Ações</th>

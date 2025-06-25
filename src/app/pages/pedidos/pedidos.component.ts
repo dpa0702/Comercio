@@ -42,7 +42,7 @@ registerLocaleData(ptBr);
 })
 
 export class PedidosComponent implements OnInit, AfterViewInit {
-  displayedColumns: string[] = ['id', 'data', 'clienteNome', 'meioPagamento', 'cpfnanota', 'total', 'detalhes'];
+  displayedColumns: string[] = ['id', 'data', 'clienteNome', 'meioPagamento', 'cpfnanota', 'total', 'detalhes', 'delete'];
   expandedElement: any | null = null;
   dataSource = new MatTableDataSource<any>([]);
 

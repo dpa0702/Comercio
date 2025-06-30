@@ -19,7 +19,7 @@ export class PedidoService {
     return this.http.get<any[]>(this.apiUrl + '?status=true');
   }
 
-listarAPrazoDia(): Observable<any[]> {
+  listarAPrazoDia(): Observable<any[]> {
     return this.http.get<any[]>(this.apiUrl + '/Pedidos/APrazoDia');
   }
 
@@ -43,5 +43,9 @@ listarAPrazoDia(): Observable<any[]> {
 
   excluir(id: number): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/${id}`);
+  }
+
+  selecionar(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/${id}`);
   }
 }

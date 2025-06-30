@@ -72,10 +72,6 @@ export class PedidosComponent implements OnInit, AfterViewInit {
     });
   }
 
-  async printar(pedido: any){
-    alert(pedido.observacoes);
-  };
-
   async abrirImpressao(pedido: any) {
     const popupWin = window.open('', '_blank', 'width=600,height=800');
     let observacoesHtml = '';
@@ -252,8 +248,8 @@ export class PedidosComponent implements OnInit, AfterViewInit {
   }
 
   podeExcluir(pedido: any): boolean {
-    if (!pedido.data) return false;
-
+    if(!pedido.data) return false;
+    if(pedido.isExcluido) return false;
     const dataPedido = new Date(pedido.data);
     const agora = new Date();
     const diffEmMinutos = (agora.getTime() - dataPedido.getTime()) / (1000 * 60);

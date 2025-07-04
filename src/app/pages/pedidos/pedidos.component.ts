@@ -244,6 +244,14 @@ export class PedidosComponent implements OnInit, AfterViewInit {
         console.log('Pedido excluído com sucesso:', res);
         this.carregarPedidos();
       },
+      error: (err) => {
+        if (err.status === 403) {
+          this.snackBar.open('Você não tem permissão para excluir este pedido.', 'Fechar', { duration: 3000 });
+        } else {
+          console.error('Erro ao excluir pedido:', err);
+          this.snackBar.open('Erro ao excluir o pedido.', 'Fechar', { duration: 3000 });
+        }
+      }
     });
   }
 

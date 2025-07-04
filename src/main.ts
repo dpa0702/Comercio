@@ -14,6 +14,7 @@ import { MeiosPagamentoComponent } from './app/pages/meios-pagamento/meios-pagam
 import { FuncionariosComponent } from './app/pages/funcionarios/funcionarios.component';
 import { PedidoClienteComponent } from './app/pages/pedidos/pedido-cliente/pedido-cliente.component';
 import { RelatoriosComponent } from './app/pages/relatorios/relatorios.component';
+import { CaixaComponent } from './app/pages/caixa/caixa.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -30,6 +31,7 @@ const routes: Routes = [
       { path: 'funcionarios', component: FuncionariosComponent, canActivate: [AuthGuard] },
       { path: 'meios-pagamento', component: MeiosPagamentoComponent, canActivate: [AuthGuard] },
       { path: 'relatorios', component: RelatoriosComponent, canActivate: [AuthGuard] },
+      { path: 'caixa', component: CaixaComponent, canActivate: [AuthGuard] },
     ]
   },
   { path: '', redirectTo: 'login', pathMatch: 'full' },

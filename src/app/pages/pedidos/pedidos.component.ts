@@ -16,6 +16,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { getPortuguesePaginatorIntl } from '../../components/mat-paginator-intl-pt/mat-paginator-intl-pt';
 import ptBr from '@angular/common/locales/pt';
 import * as QRCode from 'qrcode';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 registerLocaleData(ptBr);
 
@@ -33,7 +34,8 @@ registerLocaleData(ptBr);
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
-    MatSortModule
+    MatSortModule,
+    MatSnackBarModule,
     ],
     providers: [
       { provide: LOCALE_ID, useValue: 'pt-BR' },
@@ -42,7 +44,7 @@ registerLocaleData(ptBr);
 })
 
 export class PedidosComponent implements OnInit, AfterViewInit {
-  displayedColumns: string[] = ['id', 'data', 'clienteNome', 'meioPagamento', 'cpfnanota', 'total', 'detalhes'];
+  displayedColumns: string[] = ['id', 'data', 'clienteNome', 'meioPagamento', 'cpfnanota', 'total', 'detalhes', 'delete'];
   expandedElement: any | null = null;
   dataSource = new MatTableDataSource<any>([]);
 
@@ -51,7 +53,8 @@ export class PedidosComponent implements OnInit, AfterViewInit {
   
   constructor(private pedidoService: PedidoService, 
     private dialog: MatDialog, 
-    private router: Router) {}
+    private router: Router,
+    private snackBar: MatSnackBar,) {}
 
   ngOnInit(): void {
     this.carregarPedidos();
@@ -68,10 +71,6 @@ export class PedidosComponent implements OnInit, AfterViewInit {
       data: pedido
     });
   }
-
-  async printar(pedido: any){
-    alert(pedido.observacoes);
-  };
 
   async abrirImpressao(pedido: any) {
     const popupWin = window.open('', '_blank', 'width=600,height=800');
@@ -238,10 +237,28 @@ export class PedidosComponent implements OnInit, AfterViewInit {
     this.dataSource.filter = valorFiltro.trim().toLowerCase();
   }
 
-  excluir(id: number) {
-    this.pedidoService.excluir(id).subscribe(() => {
-      this.carregarPedidos();
+  async excluirPedido(pedido: any) {
+    this.pedidoService.excluir(pedido.id).subscribe({
+      next: (res) => {
+        this.snackBar.open('Pedido Excluído com sucesso!', 'Fechar', { duration: 3000 });
+        console.log('Pedido excluído com sucesso:', res);
+        this.carregarPedidos();
+      },
     });
+  }
+
+  podeExcluir(pedido: any): boolean {
+    if(!pedido.data) return false;
+    if(pedido.isExcluido) return false;
+    const dataPedido = new Date(pedido.data);
+    const agora = new Date();
+    const diffEmMinutos = (agora.getTime() - dataPedido.getTime()) / (1000 * 60);
+
+    return diffEmMinutos <= 15;
+  }
+
+  async naopode(){
+    this.snackBar.open('Pedido não pode ser excluído!', 'Fechar', { duration: 3000 });
   }
 
   abrirFormulario(cliente?: any) {

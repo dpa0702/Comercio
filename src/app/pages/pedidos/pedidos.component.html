@@ -6,7 +6,11 @@
     <input matInput (keyup)="aplicarFiltro($event)" placeholder="Digite para filtrar">
   </mat-form-field>
 
-  <button mat-raised-button color="primary" (click)="abrirFormulario()">Novo Pedido</button>
+  <button mat-raised-button color="primary" (click)="abrirFormulario()">
+    {{ !statusCaixa ? 'Carregando...' : 
+      (statusCaixa.isopened ? 'Novo Pedido' : 'Novo Pedido não disponível, favor Abrir o Caixa!')
+      }}
+  </button>
 
   <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
     <ng-container matColumnDef="id">

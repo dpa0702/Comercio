@@ -21,6 +21,7 @@ import { MatPaginatorIntl } from "@angular/material/paginator";
 import { getPortuguesePaginatorIntl } from "../../../components/mat-paginator-intl-pt/mat-paginator-intl-pt";
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { StatusCaixaService } from "../../../services/status-caixa.service";
 
 registerLocaleData(ptBr);
 
@@ -57,6 +58,7 @@ export class PedidoFormComponent {
   revendedor = false;
 
   constructor(
+    private statusCaixaService: StatusCaixaService,
     private clienteService: ClienteService,
     private produtoService: ProdutoService,
     private pedidoService: PedidoService,
@@ -157,23 +159,12 @@ export class PedidoFormComponent {
         this.pedidoForm.get('valorRecebido')?.setErrors(null);
       }
     }
-  }   
+  }
 
   salvar() {
     if (this.pedidoForm.valid) {
       this.calcularTotal(); // Garante que o total esteja atualizado
       const pedido = this.pedidoForm.value;
-
-
-      // pedido.produtos = pedido.produtos.map((produto: any) => {
-      //   return {
-      //     produto: produto.produto.id,
-      //     nome: produto.produto.nome,
-      //     quantidade: produto.quantidade,
-      //     preco: produto.preco
-      //   };
-      // });
-
 
       if(pedido.valorRecebido !== null && pedido.valorRecebido !== undefined
         && pedido.troco !== null && pedido.troco !== undefined) {
@@ -181,72 +172,79 @@ export class PedidoFormComponent {
           + ' | Troco: ' + this.troco.toFixed(2);
       }
 
-      if(pedido.meioPagamento === 2) {
-        const verificaStatusSefaz = this.pedidoService.verificaStatusSefaz().subscribe(
-          data => {
-            console.log('Status da Sefaz:', data);
-            if (data.mensagem === true) {
-              this.pedidoService.adicionar(pedido).subscribe({
-                next: (res) => {
-                  this.snackBar.open('Pedido adicionado com sucesso!', 'Fechar', { duration: 3000 });
-                  console.log('Pedido adicionado com sucesso:', res);
-                  this.router.navigate(['/home/pedidos']);
-                },
-                error: (err) => {
-                  console.error('Erro ao adicionar pedido:', err);
-                  if (err.status === 400) {
-                    // Exemplo: erro de validação vindo do backend
-                    if (err.error && typeof err.error === 'string') {
-                      alert('Erro: ' + err.error); // Mensagem simples
-                    } else if (err.error && err.error.errors) {
-                      // Exemplo: erro de validação em formato mais estruturado
-                      const mensagens = Object.values(err.error.errors).flat();
-                      alert('Erros: \n' + mensagens.join('\n'));
-                    } else {
-                      alert('Requisição inválida. Verifique os dados informados.');
+      this.statusCaixaService.selecionar(1).subscribe(data => {
+        if (data.isopened) {
+          if(pedido.meioPagamento === 2) {
+            const verificaStatusSefaz = this.pedidoService.verificaStatusSefaz().subscribe(
+              data => {
+                console.log('Status da Sefaz:', data);
+                if (data.mensagem === true) {
+                  this.pedidoService.adicionar(pedido).subscribe({
+                    next: (res) => {
+                      this.snackBar.open('Pedido adicionado com sucesso!', 'Fechar', { duration: 3000 });
+                      console.log('Pedido adicionado com sucesso:', res);
+                      this.router.navigate(['/home/pedidos']);
+                    },
+                    error: (err) => {
+                      console.error('Erro ao adicionar pedido:', err);
+                      if (err.status === 400) {
+                        // Exemplo: erro de validação vindo do backend
+                        if (err.error && typeof err.error === 'string') {
+                          alert('Erro: ' + err.error); // Mensagem simples
+                        } else if (err.error && err.error.errors) {
+                          // Exemplo: erro de validação em formato mais estruturado
+                          const mensagens = Object.values(err.error.errors).flat();
+                          alert('Erros: \n' + mensagens.join('\n'));
+                        } else {
+                          alert('Requisição inválida. Verifique os dados informados.');
+                        }
+                      } else {
+                        alert('Erro inesperado. Tente novamente mais tarde.');
+                      }
                     }
-                  } else {
-                    alert('Erro inesperado. Tente novamente mais tarde.');
-                  }
+                  });
+                } else {
+                  // alert('Sefaz está fora do ar.');
+                  this.snackBar.open('Sefaz está fora do ar. Não é possível emitir NFce.', 'Fechar', { duration: 3000 });
                 }
-              });
-            } else {
-              // alert('Sefaz está fora do ar.');
-            }
-          },
-          error => {
-            console.error('Erro ao verificar status da Sefaz:', error);
-            alert('Erro ao verificar status da Sefaz.');
-          }
-        );
-      }
-      else {
-        this.pedidoService.adicionar(pedido).subscribe({
-          next: (res) => {
-            this.snackBar.open('Pedido adicionado com sucesso!', 'Fechar', { duration: 3000 });
-            console.log('Pedido adicionado com sucesso:', res);
-            this.router.navigate(['/home/pedidos']);
-          },
-          error: (err) => {
-            console.error('Erro ao adicionar pedido:', err);
-            if (err.status === 400) {
-              // Exemplo: erro de validação vindo do backend
-              if (err.error && typeof err.error === 'string') {
-                // alert('Erro: ' + err.error); // Mensagem simples
-                this.snackBar.open('Não é possível criar um pedido à prazo para o cliente padrão.', 'Fechar', { duration: 5000 });
-              } else if (err.error && err.error.errors) {
-                // Exemplo: erro de validação em formato mais estruturado
-                const mensagens = Object.values(err.error.errors).flat();
-                alert('Erros: \n' + mensagens.join('\n'));
-              } else {
-                alert('Requisição inválida. Verifique os dados informados.');
+              },
+              error => {
+                console.error('Erro ao verificar status da Sefaz:', error);
+                alert('Erro ao verificar status da Sefaz.');
               }
-            } else {
-              alert('Erro inesperado. Tente novamente mais tarde.');
-            }
+            );
           }
-        });
-      }
+          else {
+            this.pedidoService.adicionar(pedido).subscribe({
+              next: (res) => {
+                this.snackBar.open('Pedido adicionado com sucesso!', 'Fechar', { duration: 3000 });
+                console.log('Pedido adicionado com sucesso:', res);
+                this.router.navigate(['/home/pedidos']);
+              },
+              error: (err) => {
+                console.error('Erro ao adicionar pedido:', err);
+                if (err.status === 400) {
+                  // Exemplo: erro de validação vindo do backend
+                  if (err.error && typeof err.error === 'string') {
+                    // alert('Erro: ' + err.error); // Mensagem simples
+                    this.snackBar.open('Não é possível criar um pedido à prazo para o cliente padrão.', 'Fechar', { duration: 5000 });
+                  } else if (err.error && err.error.errors) {
+                    // Exemplo: erro de validação em formato mais estruturado
+                    const mensagens = Object.values(err.error.errors).flat();
+                    alert('Erros: \n' + mensagens.join('\n'));
+                  } else {
+                    alert('Requisição inválida. Verifique os dados informados.');
+                  }
+                } else {
+                  alert('Erro inesperado. Tente novamente mais tarde.');
+                }
+              }
+            });
+          }
+        } else {
+          this.snackBar.open('Pedido não pode ser efetivado pois o caixa está fechado!', 'Fechar', { duration: 3000 });
+        }
+      });
     }
   }
 

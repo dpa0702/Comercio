@@ -13,6 +13,8 @@ import { getPortuguesePaginatorIntl } from '../../components/mat-paginator-intl-
 import { MatTabsModule } from '@angular/material/tabs';
 import { MeiosPagamentoService } from '../../services/meios-pagamento.service';
 import { PedidoService } from '../../services/pedido.service';
+import { ReactiveFormsModule, FormGroup, FormBuilder, Validators, FormArray } from "@angular/forms";
+import { StatusCaixaService } from '../../services/status-caixa.service';
 
 @Component({
   selector: 'app-caixa',
@@ -26,6 +28,7 @@ import { PedidoService } from '../../services/pedido.service';
     MatDialogModule,
     MatPaginatorModule,
     MatFormFieldModule,
+    ReactiveFormsModule,
     MatInputModule,
     MatSelectModule,
     MatSortModule,
@@ -36,7 +39,10 @@ import { PedidoService } from '../../services/pedido.service';
   ]
 })
 
-export class CaixaComponent {   
+export class CaixaComponent {
+  AFCaixaForm: FormGroup;
+  statusCaixa: any = null;
+
   displayedColumns: string[] = ['id', 'nome', 'total'];
   dataSource = new MatTableDataSource<any>([]);
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -47,12 +53,33 @@ export class CaixaComponent {
 
   constructor(
     private meiosPagamentoService: MeiosPagamentoService,
-    private pedidosService: PedidoService
-  ) {}
+    private pedidosService: PedidoService,
+    private statusCaixaService: StatusCaixaService,
+    private fb: FormBuilder,
+  ) {
+    this.AFCaixaForm = this.fb.group({
+      txtsaldo: [null],
+    });
+    
+  }
 
   ngOnInit(): void {
     this.carregarMeiosPagamento();
     this.carregarAprazoDia();
+    this.AFCaixaForm = this.fb.group({
+      txtsaldo: this.carregarSaldo(),
+    });
+    this.carregarStatusCaixa();
+  }
+
+  carregarStatusCaixa(): void{
+    this.statusCaixaService.selecionar(1).subscribe(data =>{
+      this.statusCaixa = data;
+    });
+  }
+
+  carregarSaldo(): string{
+    return 'R$ 444,00';
   }
 
   carregarMeiosPagamento(): void {
@@ -67,6 +94,10 @@ export class CaixaComponent {
       this.dataSource2.data = data;
       this.dataSource2.paginator = this.paginator2;
     })
+  }
+
+  salvarAFCaixa(): void{
+    this.statusCaixaService.atualizar(1, this.statusCaixa).subscribe(() => this.carregarStatusCaixa());
   }
 
 }

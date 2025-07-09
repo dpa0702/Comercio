@@ -263,6 +263,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
   podeExcluir(pedido: any): boolean {
     if(!pedido.data) return false;
     if(pedido.isExcluido) return false;
+    if(pedido.isPago && pedido.meioPagamento == 'À Prazo') return false;
     const dataPedido = new Date(pedido.data);
     const agora = new Date();
     const diffEmMinutos = (agora.getTime() - dataPedido.getTime()) / (1000 * 60);

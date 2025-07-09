@@ -11,10 +11,12 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { getPortuguesePaginatorIntl } from '../../components/mat-paginator-intl-pt/mat-paginator-intl-pt';
 import { MatTabsModule } from '@angular/material/tabs';
-import { MeiosPagamentoService } from '../../services/meios-pagamento.service';
-import { PedidoService } from '../../services/pedido.service';
 import { ReactiveFormsModule, FormGroup, FormBuilder, Validators, FormArray } from "@angular/forms";
 import { StatusCaixaService } from '../../services/status-caixa.service';
+import { MovimentoService } from '../../services/movimento.service';
+import { Router } from '@angular/router';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-caixa',
@@ -32,7 +34,8 @@ import { StatusCaixaService } from '../../services/status-caixa.service';
     MatInputModule,
     MatSelectModule,
     MatSortModule,
-    MatTabsModule
+    MatTabsModule,
+    MatSnackBarModule
   ],
   providers: [
     { provide: MatPaginatorIntl, useFactory: getPortuguesePaginatorIntl }
@@ -41,31 +44,26 @@ import { StatusCaixaService } from '../../services/status-caixa.service';
 
 export class CaixaComponent {
   AFCaixaForm: FormGroup;
+  SSCaixaForm: FormGroup;
   statusCaixa: any = null;
 
-  displayedColumns: string[] = ['id', 'nome', 'total'];
-  dataSource = new MatTableDataSource<any>([]);
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-
-  displayedColumns2: string[] = ['id', 'clienteNome', 'total'];
-  dataSource2 = new MatTableDataSource<any>([]);
-  @ViewChild(MatPaginator) paginator2!: MatPaginator;
-
   constructor(
-    private meiosPagamentoService: MeiosPagamentoService,
-    private pedidosService: PedidoService,
     private statusCaixaService: StatusCaixaService,
+    private movimentoService: MovimentoService,
     private fb: FormBuilder,
+    private router: Router,
+    private snackBar: MatSnackBar,
   ) {
     this.AFCaixaForm = this.fb.group({
       txtsaldo: [null],
     });
-    
+    this.SSCaixaForm = this.fb.group({
+      txtvalor: ['', Validators.required],
+      obs: ['', Validators.required],
+    });
   }
 
   ngOnInit(): void {
-    this.carregarMeiosPagamento();
-    this.carregarAprazoDia();
     this.AFCaixaForm = this.fb.group({
       txtsaldo: this.carregarSaldo(),
     });
@@ -79,25 +77,31 @@ export class CaixaComponent {
   }
 
   carregarSaldo(): string{
-    return 'R$ 444,00';
-  }
-
-  carregarMeiosPagamento(): void {
-    this.meiosPagamentoService.listarCaixa().subscribe(data => {
-      this.dataSource.data = data;
-      this.dataSource.paginator = this.paginator;
-    });
-  }
-
-  carregarAprazoDia(): void{
-    this.pedidosService.listarAPrazoDia().subscribe(data => {
-      this.dataSource2.data = data;
-      this.dataSource2.paginator = this.paginator2;
-    })
+    return 'R$ 0,00';
   }
 
   salvarAFCaixa(): void{
     this.statusCaixaService.atualizar(1, this.statusCaixa).subscribe(() => this.carregarStatusCaixa());
+  }
+
+  salvarMovimento(): void{
+    const movimento = this.SSCaixaForm.value;
+    this.movimentoService.adicionar(movimento).subscribe({
+      next: (res) => {
+        this.snackBar.open('Sangria / Suprimento adicionado com sucesso!', 'Fechar', { duration: 3000 });
+        this.SSCaixaForm.reset();
+      },
+      error: (err) => {
+        console.error('Erro ao adicionar Sangria / Suprimento:', err);
+        if (err.status === 400) {
+          this.snackBar.open('Erro ao adicionar Sangria / Suprimento.', 'Fechar', { duration: 3000 });
+        }
+        if (err.status === 401) {
+          this.snackBar.open('Você não possui permissão para adicionar Sangria / Suprimento.', 'Fechar', { duration: 3000 });
+        }
+        this.snackBar.open('Erro ao adicionar Sangria / Suprimento.', 'Fechar', { duration: 3000 });
+      }
+    });
   }
 
 }

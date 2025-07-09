@@ -204,7 +204,6 @@ export class PedidoFormComponent {
                     }
                   });
                 } else {
-                  // alert('Sefaz está fora do ar.');
                   this.snackBar.open('Sefaz está fora do ar. Não é possível emitir NFce.', 'Fechar', { duration: 3000 });
                 }
               },

@@ -11,6 +11,8 @@ import { MatOptionModule } from '@angular/material/core';
 import { MeiosPagamentoService } from "../../../services/meios-pagamento.service";
 import { ClienteService } from '../../../services/cliente.service';
 import { Router } from '@angular/router';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-cliente-baixa',
@@ -21,7 +23,9 @@ import { Router } from '@angular/router';
      MatButtonModule, 
      MatDialogModule,
      MatSelectModule,
-     MatOptionModule],
+     MatOptionModule,
+     MatSnackBarModule,
+    ],
   standalone: true,
   templateUrl: './cliente-baixa.component.html',
   styleUrl: './cliente-baixa.component.css'
@@ -37,6 +41,7 @@ export class ClienteBaixaComponent {
     private clienteService: ClienteService,
     private router: Router,
     private fb: FormBuilder,
+    private snackBar: MatSnackBar,
   ) {
     this.clienteBaixaForm = this.fb.group({
       meioPagamento: [null, Validators.required],
@@ -56,19 +61,21 @@ export class ClienteBaixaComponent {
 
   salvar() {
     const cliente = this.clienteBaixaForm.value;
-
     this.clienteService.atualizarSaldo(this.data.id, cliente).subscribe({
       next: (res) => {
         console.log('Baixa de pagamento realizada com sucesso:', res);
         this.router.navigate(['/home/pedidos']);
       },
       error: (err) => {
-        console.error('Erro ao realizar baixa:', err);
+        if(err.status == 404){
+          this.snackBar.open('Caixa Fechado!', 'Fechar', { duration: 3000 });
+        }
+        else{
+          this.snackBar.open('Erro ao realizar baixa.', 'Fechar', { duration: 3000 });
+          console.error('Erro ao realizar baixa:', err);
+        }
       }
     });
-
-    // alert(this.data.id + ' - ' + this.data.clienteNome + ' - ' + this.data.cpfnanota + ' - ' + this.data.total + ' - ' + this.data.meioPagamento);
-    // alert(this.pedidoDetalheForm?.get('meioPagamento')?.value + ' - ' + this.pedidoDetalheForm?.get('valorRecebido')?.value);
     this.dialogRef.close();
   }
 

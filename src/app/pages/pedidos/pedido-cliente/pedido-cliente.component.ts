@@ -43,7 +43,7 @@ registerLocaleData(ptBr);
 
 export class PedidoClienteComponent implements OnInit, AfterViewInit {
   // displayedColumns: string[] = ['id', 'data', 'clienteNome', 'meioPagamento', 'cpfnanota', 'total', 'detalhes'];
-  displayedColumns: string[] = ['id', 'data', 'clienteNome', 'meioPagamento', 'cpfnanota', 'total'];
+  displayedColumns: string[] = ['id', 'data', 'clienteNome', 'meioPagamento', 'cpfnanota', 'isPago', 'total'];
   expandedElement: any | null = null;
   dataSource = new MatTableDataSource<any>([]);
 

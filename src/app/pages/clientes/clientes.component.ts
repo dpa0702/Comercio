@@ -22,7 +22,6 @@ import ptBr from '@angular/common/locales/pt';
 import { StatusCaixaService } from '../../services/status-caixa.service';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
 registerLocaleData(ptBr);
 
 @Component({
@@ -125,7 +124,8 @@ export class ClientesComponent implements OnInit, AfterViewInit {
     }
 
   novoPedido(id: number, cpfcnpj: string, isrevendedor: boolean, saldo: number) {
-    if(true){
+    this.carregarStatusCaixa();
+    if(this.statusCaixa.isOpened){
       const query = this.cryptoService.encrypt(id.toString() + "|" + cpfcnpj + "|" + isrevendedor.toString() + "|" + saldo.toString());
       this.router.navigate(['/home/pedidos/pedidos-form'], { queryParams: { query } });
     } else {

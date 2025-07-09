@@ -86,20 +86,27 @@ export class CaixaComponent {
 
   salvarMovimento(): void{
     const movimento = this.SSCaixaForm.value;
-    this.movimentoService.adicionar(movimento).subscribe({
-      next: (res) => {
-        this.snackBar.open('Sangria / Suprimento adicionado com sucesso!', 'Fechar', { duration: 3000 });
-        this.SSCaixaForm.reset();
-      },
-      error: (err) => {
-        console.error('Erro ao adicionar Sangria / Suprimento:', err);
-        if (err.status === 400) {
-          this.snackBar.open('Erro ao adicionar Sangria / Suprimento.', 'Fechar', { duration: 3000 });
-        }
-        if (err.status === 401) {
-          this.snackBar.open('Você não possui permissão para adicionar Sangria / Suprimento.', 'Fechar', { duration: 3000 });
-        }
-        this.snackBar.open('Erro ao adicionar Sangria / Suprimento.', 'Fechar', { duration: 3000 });
+    this.statusCaixaService.selecionar(1).subscribe(data => {
+      if (data.isopened) {
+        this.movimentoService.adicionar(movimento).subscribe({
+          next: (res) => {
+            this.snackBar.open('Sangria / Suprimento adicionado com sucesso!', 'Fechar', { duration: 3000 });
+            this.SSCaixaForm.reset();
+          },
+          error: (err) => {
+            console.error('Erro ao adicionar Sangria / Suprimento:', err);
+            if (err.status === 400) {
+              this.snackBar.open('Erro ao adicionar Sangria / Suprimento.', 'Fechar', { duration: 3000 });
+            }
+            if (err.status === 401) {
+              this.snackBar.open('Você não possui permissão para adicionar Sangria / Suprimento.', 'Fechar', { duration: 3000 });
+            }
+            this.snackBar.open('Erro ao adicionar Sangria / Suprimento.', 'Fechar', { duration: 3000 });
+          }
+        });
+      }
+      else{
+        this.snackBar.open('Sangria / Suprimento não pode ser efetivado pois o caixa está fechado!', 'Fechar', { duration: 3000 });
       }
     });
   }

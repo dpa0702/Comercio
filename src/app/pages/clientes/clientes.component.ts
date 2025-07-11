@@ -72,7 +72,7 @@ export class ClientesComponent implements OnInit, AfterViewInit {
 
   carregarStatusCaixa(): void{
     this.statusCaixaService.selecionar(1).subscribe(data =>{
-      this.statusCaixa = data;
+      this.statusCaixa = data.isopened;
     });
   }
 
@@ -117,15 +117,20 @@ export class ClientesComponent implements OnInit, AfterViewInit {
   }
 
   mostrarBaixa(cliente: any) {
+    this.carregarStatusCaixa();
+    if(this.statusCaixa){
       this.dialog.open(ClienteBaixaComponent, {
         width: '600px',
         data: cliente
       });
+    } else {
+      this.snackBar.open('Baixa não pode ser realizada pois o caixa está fechado!', 'Fechar', { duration: 3000 });
     }
+  }
 
   novoPedido(id: number, cpfcnpj: string, isrevendedor: boolean, saldo: number) {
     this.carregarStatusCaixa();
-    if(this.statusCaixa.isOpened){
+    if(this.statusCaixa){
       const query = this.cryptoService.encrypt(id.toString() + "|" + cpfcnpj + "|" + isrevendedor.toString() + "|" + saldo.toString());
       this.router.navigate(['/home/pedidos/pedidos-form'], { queryParams: { query } });
     } else {

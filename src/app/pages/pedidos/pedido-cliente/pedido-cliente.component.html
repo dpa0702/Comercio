@@ -31,9 +31,14 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header>CPF / CNPJ</th>
         <td mat-cell *matCellDef="let pedido">{{ pedido.cpfnanota }}</td>
       </ng-container>
+
+      <ng-container matColumnDef="isPago">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Pago?</th>
+        <td mat-cell *matCellDef="let pedido">{{ pedido.isPago ? 'Sim' : 'Não' }}</td>
+      </ng-container>
   
       <ng-container matColumnDef="total">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Total</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Totalaaa</th>
         <td mat-cell *matCellDef="let pedido">{{ pedido.total | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</td>
       </ng-container>
   

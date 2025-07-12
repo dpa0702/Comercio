@@ -17,6 +17,7 @@ import { getPortuguesePaginatorIntl } from '../../components/mat-paginator-intl-
 import ptBr from '@angular/common/locales/pt';
 import * as QRCode from 'qrcode';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { StatusCaixaService } from '../../services/status-caixa.service';
 
 registerLocaleData(ptBr);
 
@@ -47,6 +48,7 @@ export class PedidosComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['id', 'data', 'clienteNome', 'meioPagamento', 'cpfnanota', 'total', 'detalhes', 'delete'];
   expandedElement: any | null = null;
   dataSource = new MatTableDataSource<any>([]);
+  statusCaixa: any = null;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -54,10 +56,13 @@ export class PedidosComponent implements OnInit, AfterViewInit {
   constructor(private pedidoService: PedidoService, 
     private dialog: MatDialog, 
     private router: Router,
-    private snackBar: MatSnackBar,) {}
+    private snackBar: MatSnackBar,
+    private statusCaixaService: StatusCaixaService,
+  ) {}
 
   ngOnInit(): void {
     this.carregarPedidos();
+    this.carregarStatusCaixa();
   }
 
   ngAfterViewInit(): void {
@@ -244,12 +249,21 @@ export class PedidosComponent implements OnInit, AfterViewInit {
         console.log('Pedido excluído com sucesso:', res);
         this.carregarPedidos();
       },
+      error: (err) => {
+        if (err.status === 403) {
+          this.snackBar.open('Você não tem permissão para excluir este pedido.', 'Fechar', { duration: 3000 });
+        } else {
+          console.error('Erro ao excluir pedido:', err);
+          this.snackBar.open('Erro ao excluir o pedido.', 'Fechar', { duration: 3000 });
+        }
+      }
     });
   }
 
   podeExcluir(pedido: any): boolean {
     if(!pedido.data) return false;
     if(pedido.isExcluido) return false;
+    if(pedido.isPago && pedido.meioPagamento == 'À Prazo') return false;
     const dataPedido = new Date(pedido.data);
     const agora = new Date();
     const diffEmMinutos = (agora.getTime() - dataPedido.getTime()) / (1000 * 60);
@@ -262,21 +276,16 @@ export class PedidosComponent implements OnInit, AfterViewInit {
   }
 
   abrirFormulario(cliente?: any) {
-      // const dialogRef = this.dialog.open(PedidoFormComponent, {
-      //   width: '600px',
-      //   data: cliente
-      // });
-    
-      // dialogRef.afterClosed().subscribe(result => {
-      //   if (result) {
-      //     if (cliente) {
-      //       this.pedidoService.atualizar(cliente.id, result).subscribe(() => this.carregarPedidos());
-      //     } else {
-      //       this.pedidoService.adicionar(result).subscribe(() => this.carregarPedidos());
-      //     }
-      //   }
-      // });
-
+    if(this.statusCaixa.isopened)
       this.router.navigate(['/home/pedidos/pedidos-form']);
-    }
+    else
+      // this.statusCaixaService.atualizar(1, this.statusCaixa).subscribe(() => this.carregarStatusCaixa());
+      this.snackBar.open('Caixa Fechado!', 'Fechar', { duration: 3000 });
+  }
+
+  carregarStatusCaixa(): void{
+    this.statusCaixaService.selecionar(1).subscribe(data =>{
+      this.statusCaixa = data;
+    });
+  }
 }

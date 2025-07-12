@@ -60,8 +60,13 @@ export class LoginComponent {
             this.erroLogin = 'E-mail ou senha incorretos. Tente novamente.';
           }
         },
-        error: () => {
-          this.erroLogin = 'Erro ao tentar realizar login. Tente novamente mais tarde.';
+        error: (err) => {
+          if (err.status === 401 || err.status === 404) {
+            this.erroLogin = 'Usuário e/ou senha incorretos. Tente novamente.';
+          }
+          else {
+            this.erroLogin = 'Erro ao tentar realizar login. Tente novamente mais tarde.';
+          }
         }
       });
     }

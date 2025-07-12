@@ -2,51 +2,39 @@
     <h2>Caixa</h2>
     <mat-tab-group>
         <mat-tab label="Abertura / Fechamento Caixa">
-            <div class="p-4">
-                <!-- <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 mt-4">
-
-                    <ng-container matColumnDef="id">
-                    <th mat-header-cell *matHeaderCellDef>ID</th>
-                    <td mat-cell *matCellDef="let element">{{ element.id }}</td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="nome">
-                    <th mat-header-cell *matHeaderCellDef>Caixa</th>
-                    <td mat-cell *matCellDef="let element">{{ element.nome }}</td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="total">
-                    <th mat-header-cell *matHeaderCellDef>Total</th>
-                    <td mat-cell *matCellDef="let element">{{ element.total | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</td>
-                    </ng-container>
-
-                    <tr mat-header-row *matHeaderRowDef="['id', 'nome', 'total']"></tr>
-                    <tr mat-row *matRowDef="let row; columns: ['id', 'nome', 'total'];"></tr>
-                </table> -->
-            </div>
+            <form [formGroup]="AFCaixaForm" (ngSubmit)="salvarAFCaixa()">
+                <br/>
+                <mat-form-field class="preco-width">
+                <mat-label>Saldo</mat-label>
+                <input matInput formControlName="txtsaldo" readonly>
+                </mat-form-field>
+                &nbsp;
+                <button mat-raised-button color="accent" type="submit">
+                  {{ !statusCaixa ? 'Carregando...' : 
+                    (statusCaixa.isopened ? 'Fechar Caixa' : 'Abrir Caixa')
+                    }}
+                </button>
+            </form>
         </mat-tab>
-        <mat-tab label="Sangrias (Do Dia)">
+        <mat-tab label="Sangria / Suprimento (Do Dia)">
             <div class="p-4">
-                <!-- <table mat-table [dataSource]="dataSource2" class="mat-elevation-z8 mt-4">
-
-                    <ng-container matColumnDef="id">
-                    <th mat-header-cell *matHeaderCellDef>ID</th>
-                    <td mat-cell *matCellDef="let element">{{ element.id }}</td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="nome">
-                    <th mat-header-cell *matHeaderCellDef>Cliente</th>
-                    <td mat-cell *matCellDef="let element">{{ element.clienteNome }}</td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="total">
-                    <th mat-header-cell *matHeaderCellDef>Total</th>
-                    <td mat-cell *matCellDef="let element">{{ element.total | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</td>
-                    </ng-container>
-
-                    <tr mat-header-row *matHeaderRowDef="['id', 'nome', 'total']"></tr>
-                    <tr mat-row *matRowDef="let row; columns: ['id', 'nome', 'total'];"></tr>
-                </table> -->
+                <form [formGroup]="SSCaixaForm" (ngSubmit)="salvarMovimento()">
+                    <br/>
+                    <mat-form-field class="valor-width">
+                        <mat-label>Valor </mat-label>
+                        <input matInput formControlName="txtvalor" type="number">
+                    </mat-form-field>
+                    &nbsp;
+                    <mat-form-field class="obs-width">
+                        <mat-label>Observações</mat-label>
+                        <input matInput formControlName="obs" />
+                    </mat-form-field>
+                    &nbsp;
+                    <button mat-raised-button color="accent" type="submit" [disabled]="SSCaixaForm.invalid">
+                    Salvar
+                    </button>
+                    *Utilizar sinal negativo (-) para sangria
+                </form>
             </div>
         </mat-tab>
         <mat-tab label="Transferências">

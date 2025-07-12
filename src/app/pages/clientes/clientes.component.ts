@@ -19,7 +19,9 @@ import { ClienteBaixaComponent } from './cliente-baixa/cliente-baixa.component';
 import { CryptoService } from '../../services/crypto.service';
 import { registerLocaleData } from '@angular/common';
 import ptBr from '@angular/common/locales/pt';
-
+import { StatusCaixaService } from '../../services/status-caixa.service';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 registerLocaleData(ptBr);
 
 @Component({
@@ -38,7 +40,8 @@ registerLocaleData(ptBr);
     MatInputModule,
     MatSelectModule,
     MatSortModule,
-    MatIconModule
+    MatIconModule,
+    MatSnackBarModule
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'pt-BR' },
@@ -49,6 +52,7 @@ registerLocaleData(ptBr);
 export class ClientesComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['id', 'nome', 'email', 'cpfcnpj', 'telefone', 'isrevendedor', 'acoes'];
   dataSource = new MatTableDataSource<any>([]);
+  statusCaixa: any = null;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -56,11 +60,20 @@ export class ClientesComponent implements OnInit, AfterViewInit {
   constructor(private clienteService: ClienteService, 
     private dialog: MatDialog,
     private router: Router,
+    private statusCaixaService: StatusCaixaService,
+    private snackBar: MatSnackBar,
     private cryptoService: CryptoService
   ) {}
 
   ngOnInit(): void {
     this.carregarClientes(); // Apenas obtém os clientes, sem subscrição direta
+    this.carregarStatusCaixa();
+  }
+
+  carregarStatusCaixa(): void{
+    this.statusCaixaService.selecionar(1).subscribe(data =>{
+      this.statusCaixa = data.isopened;
+    });
   }
 
   ngAfterViewInit(): void {
@@ -104,15 +117,25 @@ export class ClientesComponent implements OnInit, AfterViewInit {
   }
 
   mostrarBaixa(cliente: any) {
+    this.carregarStatusCaixa();
+    if(this.statusCaixa){
       this.dialog.open(ClienteBaixaComponent, {
         width: '600px',
         data: cliente
       });
+    } else {
+      this.snackBar.open('Baixa não pode ser realizada pois o caixa está fechado!', 'Fechar', { duration: 3000 });
     }
+  }
 
   novoPedido(id: number, cpfcnpj: string, isrevendedor: boolean, saldo: number) {
-    const query = this.cryptoService.encrypt(id.toString() + "|" + cpfcnpj + "|" + isrevendedor.toString() + "|" + saldo.toString());
-    this.router.navigate(['/home/pedidos/pedidos-form'], { queryParams: { query } });
+    this.carregarStatusCaixa();
+    if(this.statusCaixa){
+      const query = this.cryptoService.encrypt(id.toString() + "|" + cpfcnpj + "|" + isrevendedor.toString() + "|" + saldo.toString());
+      this.router.navigate(['/home/pedidos/pedidos-form'], { queryParams: { query } });
+    } else {
+      this.snackBar.open('Pedido não pode ser efetivado pois o caixa está fechado!', 'Fechar', { duration: 3000 });
+    }
   }
 
   consultaHistorico(id: number, nome: string) {

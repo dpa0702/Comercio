@@ -17,6 +17,9 @@ import { MovimentoService } from '../../services/movimento.service';
 import { Router } from '@angular/router';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { PlanoContaService } from '../../services/plano-conta.service';
+import { MeiosPagamentoService } from '../../services/meios-pagamento.service';
+import { validateHorizontalPosition } from '@angular/cdk/overlay';
 
 @Component({
   selector: 'app-caixa',
@@ -45,11 +48,20 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class CaixaComponent {
   AFCaixaForm: FormGroup;
   SSCaixaForm: FormGroup;
+  LancamentosForm: FormGroup;
+  TransferenciasForm: FormGroup;
   statusCaixa: any = null;
+  planoContas: any[] = [];
+  meioPagamento: any = null;
+  txtvalor: number = 0;
+  meioPagamentoDE: any = null;
+  meioPagamentoPARA: any = null;
 
   constructor(
     private statusCaixaService: StatusCaixaService,
     private movimentoService: MovimentoService,
+    private planoContaService: PlanoContaService,
+    private meiosPagamentoService: MeiosPagamentoService,
     private fb: FormBuilder,
     private router: Router,
     private snackBar: MatSnackBar,
@@ -61,6 +73,18 @@ export class CaixaComponent {
       txtvalor: ['', Validators.required],
       obs: ['', Validators.required],
     });
+    this.LancamentosForm = this.fb.group({
+      meioPagamento: ['', Validators.required],
+      planoConta: ['', Validators.required],
+      txtvalor: [0, Validators.required],
+      obsL: ['', Validators.required]
+    });
+    this.TransferenciasForm = this.fb.group({
+      meioPagamentoDE: ['', Validators.required],
+      meioPagamentoPARA: ['', Validators.required],
+      txtvalorT: [0, Validators.required],
+      obsT: ['', Validators.required]
+    })
   }
 
   ngOnInit(): void {
@@ -68,6 +92,14 @@ export class CaixaComponent {
       txtsaldo: this.carregarSaldo(),
     });
     this.carregarStatusCaixa();
+    this.carregarPlanoContas();
+    this.carregarMeiosPagamento();
+  }
+
+  carregarMeiosPagamento(): void {
+    this.meiosPagamentoService.listar().subscribe(data => {
+      this.meioPagamento = data;
+    });
   }
 
   carregarStatusCaixa(): void{
@@ -76,8 +108,14 @@ export class CaixaComponent {
     });
   }
 
+  carregarPlanoContas(): void {
+    this.planoContaService.listar().subscribe(data => {
+      this.planoContas = data;
+    });
+  }
+
   carregarSaldo(): string{
-    return 'R$ 0,00';
+    return 'TODO: Carregar Saldo do Caixa Dinheiro.';//'R$ 0,00';
   }
 
   salvarAFCaixa(): void{
@@ -109,6 +147,14 @@ export class CaixaComponent {
         this.snackBar.open('Sangria / Suprimento não pode ser efetivado pois o caixa está fechado!', 'Fechar', { duration: 3000 });
       }
     });
+  }
+
+  salvarLancamento(): void{
+    alert('salvarLancamento');
+  }
+
+  salvarTransferencias(): void{
+    alert('salvarTransferencias');
   }
 
 }

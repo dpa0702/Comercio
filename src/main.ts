@@ -15,6 +15,7 @@ import { FuncionariosComponent } from './app/pages/funcionarios/funcionarios.com
 import { PedidoClienteComponent } from './app/pages/pedidos/pedido-cliente/pedido-cliente.component';
 import { RelatoriosComponent } from './app/pages/relatorios/relatorios.component';
 import { CaixaComponent } from './app/pages/caixa/caixa.component';
+import { PlanoContaComponent } from './app/pages/plano-conta/plano-conta.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -32,6 +33,7 @@ const routes: Routes = [
       { path: 'meios-pagamento', component: MeiosPagamentoComponent, canActivate: [AuthGuard] },
       { path: 'relatorios', component: RelatoriosComponent, canActivate: [AuthGuard] },
       { path: 'caixa', component: CaixaComponent, canActivate: [AuthGuard] },
+      { path: 'plano-conta', component: PlanoContaComponent, canActivate: [AuthGuard] },
     ]
   },
   { path: '', redirectTo: 'login', pathMatch: 'full' },

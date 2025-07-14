@@ -17,6 +17,8 @@ import { MovimentoService } from '../../services/movimento.service';
 import { Router } from '@angular/router';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { PlanoContaService } from '../../services/plano-conta.service';
+import { MeiosPagamentoService } from '../../services/meios-pagamento.service';
 
 @Component({
   selector: 'app-caixa',
@@ -45,11 +47,16 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class CaixaComponent {
   AFCaixaForm: FormGroup;
   SSCaixaForm: FormGroup;
+  LancamentosForm: FormGroup;
   statusCaixa: any = null;
+  planoContas: any[] = [];
+  meiosPagamento: any[] = [];
 
   constructor(
     private statusCaixaService: StatusCaixaService,
     private movimentoService: MovimentoService,
+    private planoContaService: PlanoContaService,
+    private meiosPagamentoService: MeiosPagamentoService,
     private fb: FormBuilder,
     private router: Router,
     private snackBar: MatSnackBar,
@@ -61,6 +68,7 @@ export class CaixaComponent {
       txtvalor: ['', Validators.required],
       obs: ['', Validators.required],
     });
+    this.LancamentosForm = this.fb.group({});
   }
 
   ngOnInit(): void {
@@ -68,6 +76,14 @@ export class CaixaComponent {
       txtsaldo: this.carregarSaldo(),
     });
     this.carregarStatusCaixa();
+    this.carregarPlanoContas();
+    this.carregarMeiosPagamento();
+  }
+
+  carregarMeiosPagamento(): void {
+    this.meiosPagamentoService.listar().subscribe(data => {
+      this.meiosPagamento = data;
+    });
   }
 
   carregarStatusCaixa(): void{
@@ -76,8 +92,14 @@ export class CaixaComponent {
     });
   }
 
+  carregarPlanoContas(): void {
+    this.planoContaService.listar().subscribe(data => {
+      this.planoContas = data;
+    });
+  }
+
   carregarSaldo(): string{
-    return 'R$ 0,00';
+    return 'TODO: Carregar Saldo do Caixa Dinheiro.';//'R$ 0,00';
   }
 
   salvarAFCaixa(): void{
@@ -109,6 +131,10 @@ export class CaixaComponent {
         this.snackBar.open('Sangria / Suprimento não pode ser efetivado pois o caixa está fechado!', 'Fechar', { duration: 3000 });
       }
     });
+  }
+
+  salvarLancamento(): void{
+    alert('salvarLancamento');
   }
 
 }

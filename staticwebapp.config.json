@@ -5,8 +5,11 @@
       "headers": {
         "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
         "X-Frame-Options": "DENY",
+        "Cache-Control": "no-store, no-cache, must-revalidate",
+        "Pragma": "no-cache",
+        "script-src": "'self' 'unsafe-inline'",
         "X-Content-Type-Options": "nosniff",
-        "Content-Security-Policy": "default-src 'self'; connect-src 'self' https://nadatemaqui.dyndns-remote.com:1443; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:;"
+        "Content-Security-Policy": "default-src 'self'; connect-src 'self' https://nadatemaqui.dyndns-remote.com:1443; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:;"
       }
     }
   ]

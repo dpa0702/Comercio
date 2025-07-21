@@ -45,9 +45,9 @@
                     <br/>
                     <mat-form-field class="full-width">
                     <mat-label>Meio de Pagamento</mat-label>
-                    <mat-select formControlName="meioPagamento"> 
-                        <mat-option *ngFor="let meioPagamento of meioPagamento" [value]="meioPagamento.id">
-                            {{ meioPagamento.nome }}
+                    <mat-select formControlName="meioPagamentoL"> 
+                        <mat-option *ngFor="let meioPagamentoL of meioPagamentoL" [value]="meioPagamentoL.id">
+                            {{ meioPagamentoL.nome }}
                         </mat-option>
                     </mat-select>
                     </mat-form-field>
@@ -79,7 +79,7 @@
             </div>
         </mat-tab>
 
-        <mat-tab label="Tranferências">
+        <mat-tab label="Transferências">
             <div class="p-4">
                 <form [formGroup]="TransferenciasForm" (ngSubmit)="salvarTransferencias()">
                     <br/>

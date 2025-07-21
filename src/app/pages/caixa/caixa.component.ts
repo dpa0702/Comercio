@@ -52,7 +52,7 @@ export class CaixaComponent {
   TransferenciasForm: FormGroup;
   statusCaixa: any = null;
   planoContas: any[] = [];
-  meioPagamento: any = null;
+  meioPagamentoL: any = null;
   txtvalor: number = 0;
   meioPagamentoDE: any = null;
   meioPagamentoPARA: any = null;
@@ -73,8 +73,18 @@ export class CaixaComponent {
       txtvalor: ['', Validators.required],
       obs: ['', Validators.required],
     });
-    this.LancamentosForm = this.fb.group({});
-    this.TransferenciasForm=this.fb.group({});
+    this.LancamentosForm = this.fb.group({
+      meioPagamentoL: ['', Validators.required],
+      planoConta: ['' , Validators.required],
+      txtvalor: ['', Validators.required],
+      obsL: ['', Validators.required]
+    });
+    this.TransferenciasForm=this.fb.group({
+      meioPagamentoDE: ['', Validators.required],
+      meioPagamentoPARA: ['', Validators.required],
+      txtvalorT: ['', Validators.required],
+      obsT: ['', Validators.required]
+    });
   }
 
   ngOnInit(): void {
@@ -88,7 +98,9 @@ export class CaixaComponent {
 
   carregarMeiosPagamento(): void {
     this.meiosPagamentoService.listar().subscribe(data => {
-      this.meioPagamento = data;
+      this.meioPagamentoL = data;
+      this.meioPagamentoDE = data;
+      this.meioPagamentoPARA = data;
     });
   }
 

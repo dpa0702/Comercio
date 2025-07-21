@@ -19,10 +19,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PlanoContaService } from '../../services/plano-conta.service';
 import { MeiosPagamentoService } from '../../services/meios-pagamento.service';
-<<<<<<< HEAD
 import { validateHorizontalPosition } from '@angular/cdk/overlay';
-=======
->>>>>>> 93d9126fc52761970acad6a831207a2008379df5
 
 @Component({
   selector: 'app-caixa',
@@ -52,7 +49,6 @@ export class CaixaComponent {
   AFCaixaForm: FormGroup;
   SSCaixaForm: FormGroup;
   LancamentosForm: FormGroup;
-<<<<<<< HEAD
   TransferenciasForm: FormGroup;
   statusCaixa: any = null;
   planoContas: any[] = [];
@@ -60,11 +56,6 @@ export class CaixaComponent {
   txtvalor: number = 0;
   meioPagamentoDE: any = null;
   meioPagamentoPARA: any = null;
-=======
-  statusCaixa: any = null;
-  planoContas: any[] = [];
-  meiosPagamento: any[] = [];
->>>>>>> 93d9126fc52761970acad6a831207a2008379df5
 
   constructor(
     private statusCaixaService: StatusCaixaService,
@@ -82,22 +73,8 @@ export class CaixaComponent {
       txtvalor: ['', Validators.required],
       obs: ['', Validators.required],
     });
-<<<<<<< HEAD
-    this.LancamentosForm = this.fb.group({
-      meioPagamento: ['', Validators.required],
-      planoConta: ['', Validators.required],
-      txtvalor: [0, Validators.required],
-      obsL: ['', Validators.required]
-    });
-    this.TransferenciasForm = this.fb.group({
-      meioPagamentoDE: ['', Validators.required],
-      meioPagamentoPARA: ['', Validators.required],
-      txtvalorT: [0, Validators.required],
-      obsT: ['', Validators.required]
-    })
-=======
     this.LancamentosForm = this.fb.group({});
->>>>>>> 93d9126fc52761970acad6a831207a2008379df5
+    this.TransferenciasForm=this.fb.group({});
   }
 
   ngOnInit(): void {
@@ -111,11 +88,7 @@ export class CaixaComponent {
 
   carregarMeiosPagamento(): void {
     this.meiosPagamentoService.listar().subscribe(data => {
-<<<<<<< HEAD
       this.meioPagamento = data;
-=======
-      this.meiosPagamento = data;
->>>>>>> 93d9126fc52761970acad6a831207a2008379df5
     });
   }
 
@@ -170,11 +143,8 @@ export class CaixaComponent {
     alert('salvarLancamento');
   }
 
-<<<<<<< HEAD
   salvarTransferencias(): void{
     alert('salvarTransferencias');
   }
 
-=======
->>>>>>> 93d9126fc52761970acad6a831207a2008379df5
 }

@@ -16,6 +16,7 @@
                 </button>
             </form>
         </mat-tab>
+
         <mat-tab label="Sangria / Suprimento">
             <div class="p-4">
                 <form [formGroup]="SSCaixaForm" (ngSubmit)="salvarMovimento()">
@@ -37,15 +38,16 @@
                 </form>
             </div>
         </mat-tab>
+
         <mat-tab label="Lançamentos">
             <div class="p-4">
                 <form [formGroup]="LancamentosForm" (ngSubmit)="salvarLancamento()">
                     <br/>
                     <mat-form-field class="full-width">
                     <mat-label>Meio de Pagamento</mat-label>
-                    <mat-select formControlName="meioPagamento"> 
-                        <mat-option *ngFor="let meioPagamento of meiosPagamento" [value]="meioPagamento.id">
-                            {{ meioPagamento.nome }}
+                    <mat-select formControlName="meioPagamentoL"> 
+                        <mat-option *ngFor="let meioPagamentoL of meioPagamentoL" [value]="meioPagamentoL.id">
+                            {{ meioPagamentoL.nome }}
                         </mat-option>
                     </mat-select>
                     </mat-form-field>
@@ -66,7 +68,7 @@
 
                     <mat-form-field class="full-width">
                         <mat-label>Observações</mat-label>
-                        <input matInput formControlName="obs" />
+                        <input matInput formControlName="obsL" />
                     </mat-form-field>
 
                     <button mat-raised-button color="accent" type="submit" [disabled]="LancamentosForm.invalid">
@@ -76,6 +78,46 @@
                 </form>
             </div>
         </mat-tab>
-    </mat-tab-group>
 
+        <mat-tab label="Transferências">
+            <div class="p-4">
+                <form [formGroup]="TransferenciasForm" (ngSubmit)="salvarTransferencias()">
+                    <br/>
+                    <mat-form-field class="full-width">
+                    <mat-label>DE --> Meio de Pagamento</mat-label>
+                    <mat-select formControlName="meioPagamentoDE"> 
+                        <mat-option *ngFor="let meioPagamentoDE of meioPagamentoDE" [value]="meioPagamentoDE.id">
+                            {{ meioPagamentoDE.nome }}
+                        </mat-option>
+                    </mat-select>
+                    </mat-form-field>
+                    
+                    <mat-form-field class="full-width">
+                        <mat-label>Valor </mat-label>
+                        <input matInput formControlName="txtvalorT" type="number">
+                    </mat-form-field>
+
+                    <mat-form-field class="full-width">
+                    <mat-label>PARA --> Meio de Pagamento</mat-label>
+                    <mat-select formControlName="meioPagamentoPARA"> 
+                        <mat-option *ngFor="let meioPagamentoPARA of meioPagamentoPARA" [value]="meioPagamentoPARA.id">
+                            {{ meioPagamentoPARA.nome }}
+                        </mat-option>
+                    </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field class="full-width">
+                        <mat-label>Observações</mat-label>
+                        <input matInput formControlName="obsT" />
+                    </mat-form-field>
+
+                    <button mat-raised-button color="accent" type="submit" [disabled]="TransferenciasForm.invalid">
+                    Salvar
+                    </button>
+
+                </form>
+            </div>
+        </mat-tab>
+
+    </mat-tab-group>
 </mat-card>

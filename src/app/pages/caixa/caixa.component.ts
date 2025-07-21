@@ -19,6 +19,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PlanoContaService } from '../../services/plano-conta.service';
 import { MeiosPagamentoService } from '../../services/meios-pagamento.service';
+import { validateHorizontalPosition } from '@angular/cdk/overlay';
 
 @Component({
   selector: 'app-caixa',
@@ -48,9 +49,13 @@ export class CaixaComponent {
   AFCaixaForm: FormGroup;
   SSCaixaForm: FormGroup;
   LancamentosForm: FormGroup;
+  TransferenciasForm: FormGroup;
   statusCaixa: any = null;
   planoContas: any[] = [];
-  meiosPagamento: any[] = [];
+  meioPagamentoL: any = null;
+  txtvalor: number = 0;
+  meioPagamentoDE: any = null;
+  meioPagamentoPARA: any = null;
 
   constructor(
     private statusCaixaService: StatusCaixaService,
@@ -68,7 +73,18 @@ export class CaixaComponent {
       txtvalor: ['', Validators.required],
       obs: ['', Validators.required],
     });
-    this.LancamentosForm = this.fb.group({});
+    this.LancamentosForm = this.fb.group({
+      meioPagamentoL: ['', Validators.required],
+      planoConta: ['' , Validators.required],
+      txtvalor: ['', Validators.required],
+      obsL: ['', Validators.required]
+    });
+    this.TransferenciasForm=this.fb.group({
+      meioPagamentoDE: ['', Validators.required],
+      meioPagamentoPARA: ['', Validators.required],
+      txtvalorT: ['', Validators.required],
+      obsT: ['', Validators.required]
+    });
   }
 
   ngOnInit(): void {
@@ -82,7 +98,9 @@ export class CaixaComponent {
 
   carregarMeiosPagamento(): void {
     this.meiosPagamentoService.listar().subscribe(data => {
-      this.meiosPagamento = data;
+      this.meioPagamentoL = data;
+      this.meioPagamentoDE = data;
+      this.meioPagamentoPARA = data;
     });
   }
 
@@ -135,6 +153,10 @@ export class CaixaComponent {
 
   salvarLancamento(): void{
     alert('salvarLancamento');
+  }
+
+  salvarTransferencias(): void{
+    alert('salvarTransferencias');
   }
 
 }

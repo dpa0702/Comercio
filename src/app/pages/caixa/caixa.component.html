@@ -16,7 +16,10 @@
                 </button>
             </form>
         </mat-tab>
+<<<<<<< HEAD
 
+=======
+>>>>>>> 93d9126fc52761970acad6a831207a2008379df5
         <mat-tab label="Sangria / Suprimento">
             <div class="p-4">
                 <form [formGroup]="SSCaixaForm" (ngSubmit)="salvarMovimento()">
@@ -38,7 +41,10 @@
                 </form>
             </div>
         </mat-tab>
+<<<<<<< HEAD
 
+=======
+>>>>>>> 93d9126fc52761970acad6a831207a2008379df5
         <mat-tab label="Lançamentos">
             <div class="p-4">
                 <form [formGroup]="LancamentosForm" (ngSubmit)="salvarLancamento()">
@@ -46,7 +52,11 @@
                     <mat-form-field class="full-width">
                     <mat-label>Meio de Pagamento</mat-label>
                     <mat-select formControlName="meioPagamento"> 
+<<<<<<< HEAD
                         <mat-option *ngFor="let meioPagamento of meioPagamento" [value]="meioPagamento.id">
+=======
+                        <mat-option *ngFor="let meioPagamento of meiosPagamento" [value]="meioPagamento.id">
+>>>>>>> 93d9126fc52761970acad6a831207a2008379df5
                             {{ meioPagamento.nome }}
                         </mat-option>
                     </mat-select>
@@ -68,7 +78,11 @@
 
                     <mat-form-field class="full-width">
                         <mat-label>Observações</mat-label>
+<<<<<<< HEAD
                         <input matInput formControlName="obsL" />
+=======
+                        <input matInput formControlName="obs" />
+>>>>>>> 93d9126fc52761970acad6a831207a2008379df5
                     </mat-form-field>
 
                     <button mat-raised-button color="accent" type="submit" [disabled]="LancamentosForm.invalid">
@@ -78,6 +92,10 @@
                 </form>
             </div>
         </mat-tab>
+<<<<<<< HEAD
+=======
+    </mat-tab-group>
+>>>>>>> 93d9126fc52761970acad6a831207a2008379df5
 
         <mat-tab label="Tranferências">
             <div class="p-4">
